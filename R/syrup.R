@@ -10,6 +10,10 @@
 #' @param expr An expression.
 #' @param interval The interval at which to take snapshots of memory usage.
 #' In practice, there's an overhead on top of each of these intervals.
+#' @param peak Whether to return rows for only the "peak" memory usage.
+#' Interpreted as the `id` with the maximum `rss` sum. Defaults to `FALSE`,
+#' but may be helpful to set `peak = TRUE` for potentially very long-running
+#' processes so that the tibble doesn't grow too large.
 #' @param env The environment to evaluate `expr` in.
 #'
 #' @returns A tibble with column `id` and a number of columns from
@@ -17,7 +21,7 @@
 #' parent process ID `ppid`, and resident set size `rss` (a measure of memory
 #' usage).
 #' @export
-syrup <- function(expr, interval = .5, env = caller_env()) {
+syrup <- function(expr, interval = .5, peak = FALSE, env = caller_env()) {
   expr <- substitute(expr)
 
   # create a new temporary R session `sesh`
@@ -30,15 +34,25 @@ syrup <- function(expr, interval = .5, env = caller_env()) {
 
   # regularly take snapshots of memory usage of R sessions
   sesh$call(
-    function(interval, keep_going_file, ps_r_processes, exclude) {
+    function(interval, keep_going_file, ps_r_processes, exclude, peak) {
       keep_going <- readLines(keep_going_file)
       id <- 1
       res <- ps_r_processes(exclude = exclude, id = id)
+      current_peak <- sum(res$rss, na.rm = TRUE)
 
       while (as.logical(keep_going)) {
         id <- id + 1
         Sys.sleep(interval)
-        res <- vctrs::vec_rbind(res, ps_r_processes(exclude = exclude, id = id))
+        new_res <- ps_r_processes(exclude = exclude, id = id)
+        if (peak) {
+          new_peak <- sum(new_res$rss, na.rm = TRUE)
+          if (new_peak > current_peak) {
+            current_peak <- new_peak
+            res <- new_res
+          }
+        } else {
+          res <- vctrs::vec_rbind(res, new_res)
+        }
         keep_going <- readLines(keep_going_file)
       }
 
@@ -48,7 +62,8 @@ syrup <- function(expr, interval = .5, env = caller_env()) {
       interval = interval,
       keep_going_file = keep_going_file,
       ps_r_processes = ps_r_processes,
-      exclude = sesh$get_pid()
+      exclude = sesh$get_pid(),
+      peak = peak
     )
   )
 
