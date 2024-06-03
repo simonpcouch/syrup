@@ -16,12 +16,6 @@
 #' `ps::ps()` output describing memory usage. Notably, the process ID `pid`,
 #' parent process ID `ppid`, and resident set size `rss` (a measure of memory
 #' usage).
-#'
-#' @examplesIf FALSE
-#'
-#' replicate(1e4, sum(sqrt(1e4)))
-#'
-#'
 #' @export
 syrup <- function(expr, interval = .5, env = caller_env()) {
   expr <- substitute(expr)

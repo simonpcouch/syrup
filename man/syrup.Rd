@@ -27,10 +27,3 @@ By taking snapshots the memory usage of R processes at a regular \code{interval}
 the function dynamically builds up a  profile of their usage of system
 resources.
 }
-\examples{
-\dontshow{if (FALSE) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-
-replicate(1e4, sum(sqrt(1e4)))
-
-\dontshow{\}) # examplesIf}
-}
