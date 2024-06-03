@@ -66,6 +66,15 @@ syrup <- function(expr, interval = .5, env = caller_env()) {
   withr::deferred_clear()
 
   # return the memory usage information
-  sesh_res$result
+  res <- sesh_res$result
+
+  if (res$id[length(res$id)] == 1L) {
+    rlang::warn(c(
+      "!" = "`expr` evaluated fully before syrup could take a snapshot of memory usage.",
+      "*" = "Results likely represent memory usage before `expr` was evaluated."
+    ))
+  }
+
+  res
 }
 
