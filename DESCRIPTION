@@ -26,3 +26,5 @@ Imports:
     vctrs,
     withr
 Config/Needs/website: rmarkdown
+URL: https://github.com/simonpcouch/syrup
+BugReports: https://github.com/simonpcouch/syrup/issues
