@@ -108,20 +108,20 @@ The output is a tibble:
 
 ``` r
 res_mem
-#> # A tibble: 66 × 6
+#> # A tibble: 62 × 6
 #>       id   pid  ppid name                 rss       vms
 #>    <dbl> <int> <int> <chr>          <bch:byt> <bch:byt>
-#>  1     1 27434 23379 rsession-arm64   86.19MB     392GB
-#>  2     1 33517 23379 rsession-arm64     749MB     393GB
-#>  3     1 34764 33517 R                 1.08GB     393GB
-#>  4     2 27434 23379 rsession-arm64   86.19MB     392GB
-#>  5     2 33517 23379 rsession-arm64     749MB     393GB
-#>  6     2 34764 33517 R                  1.2GB     393GB
-#>  7     2 34781 34764 R               511.36MB     393GB
-#>  8     2 34782 34764 R               467.77MB     393GB
-#>  9     2 34783 34764 R               387.41MB     393GB
-#> 10     2 34784 34764 R               344.58MB     393GB
-#> # ℹ 56 more rows
+#>  1     1 27434 23379 rsession-arm64      88MB     392GB
+#>  2     1 35014 23379 rsession-arm64  353.47MB     393GB
+#>  3     1 35413 35014 R                 1.06GB     393GB
+#>  4     2 27434 23379 rsession-arm64      88MB     392GB
+#>  5     2 35014 23379 rsession-arm64  353.47MB     393GB
+#>  6     2 35413 35014 R                 1.14GB     393GB
+#>  7     2 35430 35413 R               533.92MB     393GB
+#>  8     2 35431 35413 R               527.83MB     393GB
+#>  9     2 35432 35413 R               487.28MB     393GB
+#> 10     2 35433 35413 R                441.8MB     393GB
+#> # ℹ 52 more rows
 ```
 
 In this tibble, `id` defines a specific time point at which process
@@ -153,6 +153,10 @@ each of those workers returns their results to the parent process, and
 their `rss` is once again `NA`. The parent process wraps up its
 computations before completing evaluation of the expression, at which
 point `syrup()` returns.
+
+Note that memory is weird; in the above plot, the total memory allotted
+to the parent session and its five workers at each ID is not simply the
+sum of those `rss` values, as memory is shared among them.
 
 ## Scope
 

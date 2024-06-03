@@ -101,6 +101,8 @@ res_mem %>%
 
 At first, only the parent process has non-`NA` `rss`, as tidymodels hasn't sent data off to any workers yet. Then, each of the 5 workers receives data from tidymodels and begins fitting models. Eventually, each of those workers returns their results to the parent process, and their `rss` is once again `NA`. The parent process wraps up its computations before completing evaluation of the expression, at which point `syrup()` returns.
 
+Note that memory is weird; in the above plot, the total memory allotted to the parent session and its five workers at each ID is not simply the sum of those `rss` values, as memory is shared among them.
+
 ## Scope
 
 There's nothing specific about this package that necessitates the expression provided to `syrup()` is run in parallel. Said another way, syrup will work just fine with "normal," sequentially-run R code. That said, there are many better, more fine-grained tools for the job in the case of sequential R code, such as `Rprofmem()`, the [profmem](https://cran.r-project.org/web/packages/profmem/vignettes/profmem.html) package, the [bench](https://bench.r-lib.org/) package, and packages in the [R-prof](https://github.com/r-prof) GitHub organization.
