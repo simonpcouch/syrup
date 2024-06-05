@@ -38,19 +38,18 @@ syrup <- function(expr, interval = .5, peak = FALSE, env = caller_env()) {
   sesh <- callr::r_session$new()
   withr::defer(sesh$close())
 
-  # communicate with `sesh` through a tempfile:
+  # communicate with `sesh` through existence of a tempfile:
   keep_going_file <- tempfile()
-  writeLines("TRUE", keep_going_file)
+  file.create(keep_going_file)
 
   # regularly take snapshots of memory usage of R sessions
   sesh$call(
     function(interval, keep_going_file, ps_r_processes, exclude, peak) {
-      keep_going <- readLines(keep_going_file)
       id <- 1
       res <- ps_r_processes(exclude = exclude, id = id)
       current_peak <- sum(res$rss, na.rm = TRUE)
 
-      while (as.logical(keep_going)) {
+      while (file.exists(keep_going_file)) {
         id <- id + 1
         Sys.sleep(interval)
         new_res <- ps_r_processes(exclude = exclude, id = id)
@@ -63,7 +62,6 @@ syrup <- function(expr, interval = .5, peak = FALSE, env = caller_env()) {
         } else {
           res <- vctrs::vec_rbind(res, new_res)
         }
-        keep_going <- readLines(keep_going_file)
       }
 
       res
@@ -81,7 +79,7 @@ syrup <- function(expr, interval = .5, peak = FALSE, env = caller_env()) {
   eval(expr, envir = env)
 
   # tell `sesh` to stop taking snapshots
-  writeLines("FALSE", keep_going_file)
+  file.remove(keep_going_file)
   Sys.sleep(interval + .1)
 
   # grab the result from sesh and close it
