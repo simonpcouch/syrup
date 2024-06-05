@@ -106,6 +106,6 @@ Note that memory is weird; in the above plot, the total memory allotted to the p
 
 ## Scope
 
-There's nothing specific about this package that necessitates the expression provided to `syrup()` is run in parallel. Said another way, syrup will work just fine with "normal," sequentially-run R code. That said, there are many better, more fine-grained tools for the job in the case of sequential R code, such as `Rprofmem()`, the [profmem](https://cran.r-project.org/web/packages/profmem/vignettes/profmem.html) package, the [bench](https://bench.r-lib.org/) package, and packages in the [R-prof](https://github.com/r-prof) GitHub organization.
+There's nothing specific about this package that necessitates the expression provided to `syrup()` is run in parallel. Said another way, syrup will work just fine with "normal," sequentially-run R code. That said, there are many better, more fine-grained tools for the job in the case of sequential R code, such as `Rprofmem()`, the [profmem](https://CRAN.R-project.org/package=profmem) package, the [bench](https://bench.r-lib.org/) package, and packages in the [R-prof](https://github.com/r-prof) GitHub organization.
 
 Results from syrup only provide enough detail for the coarsest analyses of memory usage, but they do provide an entry to "profiling" memory usage for R code that runs in parallel.

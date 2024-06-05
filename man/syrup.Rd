@@ -38,7 +38,7 @@ expression is run in parallel. Said another way, \code{syrup()} will work just f
 with "normal," sequentially-run R code (as in the examples). That said,
 there are many better, more fine-grained tools for the job in the case of
 sequential R code, such as \code{\link[=Rprofmem]{Rprofmem()}}, the
-\href{https://cran.r-project.org/web/packages/profmem/vignettes/profmem.html}{profmem}
+\href{https://CRAN.R-project.org/package=profmem}{profmem}
 package, the \link[bench:mark]{bench} package, and packages in
 the \href{https://github.com/r-prof}{R-prof} GitHub organization.
 

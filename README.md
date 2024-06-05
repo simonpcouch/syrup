@@ -7,8 +7,6 @@
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-[![CRAN
-status](https://www.r-pkg.org/badges/version/syrup)](https://CRAN.R-project.org/package=syrup)
 [![R-CMD-check](https://github.com/simonpcouch/syrup/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/simonpcouch/syrup/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
@@ -166,7 +164,7 @@ expression provided to `syrup()` is run in parallel. Said another way,
 syrup will work just fine with “normal,” sequentially-run R code. That
 said, there are many better, more fine-grained tools for the job in the
 case of sequential R code, such as `Rprofmem()`, the
-[profmem](https://cran.r-project.org/web/packages/profmem/vignettes/profmem.html)
+[profmem](https://CRAN.R-project.org/package=profmem)
 package, the [bench](https://bench.r-lib.org/) package, and packages in
 the [R-prof](https://github.com/r-prof) GitHub organization.
 

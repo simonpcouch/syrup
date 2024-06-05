@@ -27,7 +27,7 @@
 #' with "normal," sequentially-run R code (as in the examples). That said,
 #' there are many better, more fine-grained tools for the job in the case of
 #' sequential R code, such as [Rprofmem()], the
-#' [profmem](https://cran.r-project.org/web/packages/profmem/vignettes/profmem.html)
+#' [profmem](https://CRAN.R-project.org/package=profmem)
 #' package, the [bench][bench::mark()] package, and packages in
 #' the [R-prof](https://github.com/r-prof) GitHub organization.
 #'
