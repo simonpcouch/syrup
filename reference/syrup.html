@@ -101,7 +101,7 @@ expression is run in parallel. Said another way, <code>syrup()</code> will work 
 with "normal," sequentially-run R code (as in the examples). That said,
 there are many better, more fine-grained tools for the job in the case of
 sequential R code, such as <code><a href="https://rdrr.io/r/utils/Rprofmem.html" class="external-link">Rprofmem()</a></code>, the
-<a href="https://cran.r-project.org/web/packages/profmem/vignettes/profmem.html" class="external-link">profmem</a>
+<a href="https://CRAN.R-project.org/package=profmem" class="external-link">profmem</a>
 package, the <a href="http://bench.r-lib.org/reference/mark.html" class="external-link">bench</a> package, and packages in
 the <a href="https://github.com/r-prof" class="external-link">R-prof</a> GitHub organization.</p>
 <p>Loosely, the function works by:</p><ul><li><p>Setting up another R process (call it <code>sesh</code>) that queries system
@@ -123,26 +123,26 @@ automatically.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3 × 6</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      id   pid  ppid name        rss       vms</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:byt&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:byt&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>     1  <span style="text-decoration: underline;">5</span>899  <span style="text-decoration: underline;">1</span>621 R         259MB     918MB</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>     2  <span style="text-decoration: underline;">5</span>899  <span style="text-decoration: underline;">1</span>621 R         259MB     918MB</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>     3  <span style="text-decoration: underline;">5</span>899  <span style="text-decoration: underline;">1</span>621 R         259MB     918MB</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>     1  <span style="text-decoration: underline;">5</span>830  <span style="text-decoration: underline;">1</span>631 R         259MB     918MB</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>     2  <span style="text-decoration: underline;">5</span>830  <span style="text-decoration: underline;">1</span>631 R         259MB     918MB</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>     3  <span style="text-decoration: underline;">5</span>830  <span style="text-decoration: underline;">1</span>631 R         259MB     918MB</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># to snapshot memory information more (or less) often, set `interval`</span></span></span>
 <span class="r-in"><span><span class="fu">syrup</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.sleep.html" class="external-link">Sys.sleep</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>, interval <span class="op">=</span> <span class="fl">.01</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 30 × 6</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 32 × 6</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       id   pid  ppid name        rss       vms</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:byt&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:byt&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>     1  <span style="text-decoration: underline;">5</span>899  <span style="text-decoration: underline;">1</span>621 R         262MB     921MB</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>     2  <span style="text-decoration: underline;">5</span>899  <span style="text-decoration: underline;">1</span>621 R         262MB     921MB</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>     3  <span style="text-decoration: underline;">5</span>899  <span style="text-decoration: underline;">1</span>621 R         262MB     921MB</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>     4  <span style="text-decoration: underline;">5</span>899  <span style="text-decoration: underline;">1</span>621 R         262MB     921MB</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>     5  <span style="text-decoration: underline;">5</span>899  <span style="text-decoration: underline;">1</span>621 R         262MB     921MB</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>     6  <span style="text-decoration: underline;">5</span>899  <span style="text-decoration: underline;">1</span>621 R         262MB     921MB</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>     7  <span style="text-decoration: underline;">5</span>899  <span style="text-decoration: underline;">1</span>621 R         262MB     921MB</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>     8  <span style="text-decoration: underline;">5</span>899  <span style="text-decoration: underline;">1</span>621 R         262MB     921MB</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>     9  <span style="text-decoration: underline;">5</span>899  <span style="text-decoration: underline;">1</span>621 R         262MB     921MB</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>    10  <span style="text-decoration: underline;">5</span>899  <span style="text-decoration: underline;">1</span>621 R         262MB     921MB</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 20 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>     1  <span style="text-decoration: underline;">5</span>830  <span style="text-decoration: underline;">1</span>631 R         262MB     921MB</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>     2  <span style="text-decoration: underline;">5</span>830  <span style="text-decoration: underline;">1</span>631 R         262MB     921MB</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>     3  <span style="text-decoration: underline;">5</span>830  <span style="text-decoration: underline;">1</span>631 R         262MB     921MB</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>     4  <span style="text-decoration: underline;">5</span>830  <span style="text-decoration: underline;">1</span>631 R         262MB     921MB</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>     5  <span style="text-decoration: underline;">5</span>830  <span style="text-decoration: underline;">1</span>631 R         262MB     921MB</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>     6  <span style="text-decoration: underline;">5</span>830  <span style="text-decoration: underline;">1</span>631 R         262MB     921MB</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>     7  <span style="text-decoration: underline;">5</span>830  <span style="text-decoration: underline;">1</span>631 R         262MB     921MB</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>     8  <span style="text-decoration: underline;">5</span>830  <span style="text-decoration: underline;">1</span>631 R         262MB     921MB</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>     9  <span style="text-decoration: underline;">5</span>830  <span style="text-decoration: underline;">1</span>631 R         262MB     921MB</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>    10  <span style="text-decoration: underline;">5</span>830  <span style="text-decoration: underline;">1</span>631 R         262MB     921MB</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 22 more rows</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># use `peak = TRUE` to return only the snapshot with</span></span></span>
 <span class="r-in"><span><span class="co"># the highest memory usage (as `sum(rss)`)</span></span></span>
@@ -150,7 +150,7 @@ automatically.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 6</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      id   pid  ppid name        rss       vms</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:byt&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:byt&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>     1  <span style="text-decoration: underline;">5</span>899  <span style="text-decoration: underline;">1</span>621 R         262MB     921MB</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>     1  <span style="text-decoration: underline;">5</span>830  <span style="text-decoration: underline;">1</span>631 R         262MB     921MB</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># results from syrup are more---or maybe only---useful when</span></span></span>
 <span class="r-in"><span><span class="co"># computations are evaluated in parallel. see package README</span></span></span>
