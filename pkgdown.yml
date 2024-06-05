@@ -2,5 +2,8 @@ pandoc: 3.1.11
 pkgdown: 2.0.9
 pkgdown_sha: ~
 articles: {}
-last_built: 2024-06-05T13:42Z
+last_built: 2024-06-05T13:47Z
+urls:
+  reference: https://simonpcouch.github.io/syrup/reference
+  article: https://simonpcouch.github.io/syrup/articles
 
