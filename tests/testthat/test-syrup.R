@@ -1,3 +1,5 @@
+skip_if_not(ps::ps_os_type()[["POSIX"]])
+
 test_that("syrup works", {
   set.seed(1)
   expect_no_error(
