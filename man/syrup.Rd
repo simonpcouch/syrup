@@ -4,13 +4,18 @@
 \alias{syrup}
 \title{Memory Usage Information for Parallel R Code}
 \usage{
-syrup(expr, interval = 0.5, env = caller_env())
+syrup(expr, interval = 0.5, peak = FALSE, env = caller_env())
 }
 \arguments{
 \item{expr}{An expression.}
 
 \item{interval}{The interval at which to take snapshots of memory usage.
 In practice, there's an overhead on top of each of these intervals.}
+
+\item{peak}{Whether to return rows for only the "peak" memory usage.
+Interpreted as the \code{id} with the maximum \code{rss} sum. Defaults to \code{FALSE},
+but may be helpful to set \code{peak = TRUE} for potentially very long-running
+processes so that the tibble doesn't grow too large.}
 
 \item{env}{The environment to evaluate \code{expr} in.}
 }
@@ -26,4 +31,15 @@ be used to benchmark (peak) memory usage of parallel R code.
 By taking snapshots the memory usage of R processes at a regular \code{interval},
 the function dynamically builds up a  profile of their usage of system
 resources.
+}
+\examples{
+\dontshow{if (FALSE) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+res_syrup <- syrup({res_output <- Sys.sleep(1)})
+
+res_syrup
+
+syrup(Sys.sleep(1), interval = .01)
+
+syrup(Sys.sleep(1), interval = .01, peak = TRUE)
+\dontshow{\}) # examplesIf}
 }
