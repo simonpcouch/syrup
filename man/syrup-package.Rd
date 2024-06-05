@@ -11,6 +11,7 @@ Coarsely measures memory usage of R code run in parallel by regularly taking sna
 Useful links:
 \itemize{
   \item \url{https://github.com/simonpcouch/syrup}
+  \item \url{https://simonpcouch.github.io/syrup/}
   \item Report bugs at \url{https://github.com/simonpcouch/syrup/issues}
 }
 
