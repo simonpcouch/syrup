@@ -28,22 +28,60 @@ pak::pak("simonpcouch/syrup")
 
 ## Example
 
-We’ll demo using the package with an (admittedly dependency-heavy)
-example of tuning a regularized linear model against resamples. First,
-loading needed packages:
-
 ``` r
 library(syrup)
+#> Loading required package: bench
+```
+
+The main function in the syrup package is the function by the same name.
+The main argument to `syrup()` is an expression, and the function
+outputs a tibble. Supplying a rather boring expression:
+
+``` r
+syrup(Sys.sleep(1))
+#> # A data frame: 6 × 6
+#>      id   pid  ppid name                 rss       vms
+#>   <dbl> <int> <int> <chr>          <bch:byt> <bch:byt>
+#> 1     1 66822 58354 rsession-arm64     313MB     393GB
+#> 2     1 66925 66822 R                  110MB     392GB
+#> 3     2 66822 58354 rsession-arm64     313MB     393GB
+#> 4     2 66925 66822 R                  110MB     392GB
+#> 5     3 66822 58354 rsession-arm64     313MB     393GB
+#> 6     3 66925 66822 R                  110MB     392GB
+```
+
+In this tibble, `id` defines a specific time point at which process
+usage was snapshotted, and the remaining columns show output from
+[ps::ps()](https://ps.r-lib.org/reference/ps.html). Notably, `pid` is
+the process ID, `ppid` is the process ID of the parent process, and
+`rss` is the resident set size (a measure of memory usage).
+
+The function works by:
+
+- Setting up another R process `sesh` that queries memory information at
+  a regular interval,
+- Evaluating the supplied expression,
+- Reading the memory information back into the main process from `sesh`,
+- Closing `sesh`, and then
+- Returning the memory information.
+
+## Application: model tuning
+
+For a more interesting demo, we’ll tune a regularized linear model using
+cross-validation with tidymodels. First, loading needed packages:
+
+``` r
 library(future)
 library(tidymodels)
 library(rlang)
 ```
 
 Using future to define our parallelism strategy, we’ll set
-`plan(multicore)`, indicating that we’d like to use forking with 5
-workers. By default, future disables forking from RStudio; I know that,
-in the context of building this README, this usage of forking is safe,
-so I’ll temporarily override that default with `parallelly.fork.enable`.
+`plan(multicore, workers = 5)`, indicating that we’d like to use forking
+with 5 workers. By default, future disables forking from RStudio; I know
+that, in the context of building this README, this usage of forking is
+safe, so I’ll temporarily override that default with
+`parallelly.fork.enable`.
 
 ``` r
 local_options(parallelly.fork.enable = TRUE)
@@ -79,8 +117,11 @@ dat
 #> #   predictor_20 <dbl>
 ```
 
-The main function in the syrup package, `syrup()`, takes an expression
-as argument:
+The call to `tune_grid()` does some setup sequentially before sending
+data off to the five child processes to actually carry out the model
+fitting. After models are fitted, data is sent back to the parent
+process to be combined. To better understand memory usage throughout
+that process, we wrap the call in `syrup()`:
 
 ``` r
 res_mem <- syrup({
@@ -91,46 +132,34 @@ res_mem <- syrup({
       vfold_cv(dat)
     )
 })
-```
 
-The function works by:
-
-- Setting up another R process `sesh` that queries system information at
-  a regular interval,
-- Evaluating the supplied expression,
-- Reading the queried system information back into the main process from
-  `sesh`,
-- Closing `sesh`, and then
-- Returning the queried system information.
-
-The output is a tibble:
-
-``` r
 res_mem
-#> # A tibble: 60 × 6
+#> # A tibble: 47 × 6
 #>       id   pid  ppid name                 rss       vms
 #>    <dbl> <int> <int> <chr>          <bch:byt> <bch:byt>
-#>  1     1 58494 58354 rsession-arm64  542.34MB     393GB
-#>  2     1 59643 58494 R                 1.08GB     393GB
-#>  3     2 58494 58354 rsession-arm64  542.34MB     393GB
-#>  4     2 59643 58494 R                 1.23GB     393GB
-#>  5     2 59660 59643 R               526.48MB     393GB
-#>  6     2 59661 59643 R               489.86MB     393GB
-#>  7     2 59662 59643 R                403.3MB     393GB
-#>  8     2 59663 59643 R               327.42MB     393GB
-#>  9     2 59664 59643 R               179.06MB     393GB
-#> 10     3 58494 58354 rsession-arm64  542.34MB     393GB
-#> # ℹ 50 more rows
+#>  1     1 66822 58354 rsession-arm64  313.41MB     393GB
+#>  2     1 66925 66822 R                 1.15GB     393GB
+#>  3     2 66822 58354 rsession-arm64  313.41MB     393GB
+#>  4     2 66925 66822 R                 1.31GB     393GB
+#>  5     2 66947 66925 R               582.45MB     393GB
+#>  6     2 66948 66925 R               552.66MB     393GB
+#>  7     2 66949 66925 R               522.47MB     393GB
+#>  8     2 66950 66925 R               511.88MB     393GB
+#>  9     2 66951 66925 R               410.19MB     393GB
+#> 10     3 66822 58354 rsession-arm64  313.41MB     393GB
+#> # ℹ 37 more rows
 ```
 
-In this tibble, `id` defines a specific time point at which process
-usage was snapshotted, and the remaining columns show output from
-[ps::ps()](https://ps.r-lib.org/reference/ps.html). Notably, `pid` is
-the process ID, `ppid` is the process ID of the parent process, and
-`rss` is the resident set size (a measure of memory usage).
+These results are a bit more interesting than the sequential results
+from `Sys.sleep(1)`. Look closely at the `ppid`s for each `id`; after a
+snapshot or two, you’ll see five identical `ppid`s for each `id`, and
+those `ppid`s match up with the remaining `pid` in the one remaining R
+process. This shows us that we’ve indeed distributed computations using
+forking in that that one remaining R process, the “parent,” has spawned
+off five child processes from itself.
 
-We can plot to get a better sense of how memory usage of these processes
-changes over time.
+We can plot the result to get a better sense of how memory usage of
+these processes changes over time.
 
 ``` r
 worker_ppid <- names(sort(-table(res_mem$ppid)))[1]
@@ -153,9 +182,9 @@ their `rss` is once again `NA`. The parent process wraps up its
 computations before completing evaluation of the expression, at which
 point `syrup()` returns.
 
-Note that memory is weird; in the above plot, the total memory allotted
-to the parent session and its five workers at each ID is not simply the
-sum of those `rss` values, as memory is shared among them.
+Keep in mind: memory is weird. In the above plot, the total memory
+allotted to the parent session and its five workers at each ID is not
+simply the sum of those `rss` values, as memory is shared among them.
 
 ## Scope
 
@@ -164,9 +193,9 @@ expression provided to `syrup()` is run in parallel. Said another way,
 syrup will work just fine with “normal,” sequentially-run R code. That
 said, there are many better, more fine-grained tools for the job in the
 case of sequential R code, such as `Rprofmem()`, the
-[profmem](https://CRAN.R-project.org/package=profmem)
-package, the [bench](https://bench.r-lib.org/) package, and packages in
-the [R-prof](https://github.com/r-prof) GitHub organization.
+[profmem](https://CRAN.R-project.org/package=profmem) package, the
+[bench](https://bench.r-lib.org/) package, and packages in the
+[R-prof](https://github.com/r-prof) GitHub organization.
 
 Results from syrup only provide enough detail for the coarsest analyses
 of memory usage, but they do provide an entry to “profiling” memory

@@ -33,16 +33,37 @@ pak::pak("simonpcouch/syrup")
 
 ## Example
 
-We'll demo using the package with an (admittedly dependency-heavy) example of tuning a regularized linear model against resamples. First, loading needed packages:
+```{r}
+library(syrup)
+```
+
+The main function in the syrup package is the function by the same name. The main argument to `syrup()` is an expression, and the function outputs a tibble. Supplying a rather boring expression:
+
+```{r}
+syrup(Sys.sleep(1))
+```
+
+In this tibble, `id` defines a specific time point at which process usage was snapshotted, and the remaining columns show output from [ps::ps()](https://ps.r-lib.org/reference/ps.html). Notably, `pid` is the process ID, `ppid` is the process ID of the parent process, and `rss` is the resident set size (a measure of memory usage).
+
+The function works by:
+
+* Setting up another R process `sesh` that queries memory information at a regular interval,
+* Evaluating the supplied expression,
+* Reading the memory information back into the main process from `sesh`, 
+* Closing `sesh`, and then 
+* Returning the memory information.
+
+## Application: model tuning
+
+For a more interesting demo, we'll tune a regularized linear model using cross-validation with tidymodels. First, loading needed packages:
 
 ```{r load-pkgs, message = FALSE, warning = FALSE}
-library(syrup)
 library(future)
 library(tidymodels)
 library(rlang)
 ```
 
-Using future to define our parallelism strategy, we'll set `plan(multicore)`, indicating that we'd like to use forking with 5 workers. By default, future disables forking from RStudio; I know that, in the context of building this README, this usage of forking is safe, so I'll temporarily override that default with `parallelly.fork.enable`. 
+Using future to define our parallelism strategy, we'll set `plan(multicore, workers = 5)`, indicating that we'd like to use forking with 5 workers. By default, future disables forking from RStudio; I know that, in the context of building this README, this usage of forking is safe, so I'll temporarily override that default with `parallelly.fork.enable`. 
 
 ```{r parellel}
 local_options(parallelly.fork.enable = TRUE)
@@ -58,7 +79,7 @@ dat <- sim_regression(1000000)
 dat
 ```
 
-The main function in the syrup package, `syrup()`, takes an expression as argument:
+The call to `tune_grid()` does some setup sequentially before sending data off to the five child processes to actually carry out the model fitting. After models are fitted, data is sent back to the parent process to be combined. To better understand memory usage throughout that process, we wrap the call in `syrup()`:
 
 ```{r syrup}
 res_mem <- syrup({
@@ -69,25 +90,13 @@ res_mem <- syrup({
       vfold_cv(dat)
     )
 })
-```
 
-The function works by:
-
-* Setting up another R process `sesh` that queries system information at a regular interval,
-* Evaluating the supplied expression,
-* Reading the queried system information back into the main process from `sesh`, 
-* Closing `sesh`, and then 
-* Returning the queried system information.
-
-The output is a tibble:
-
-```{r res-mem}
 res_mem
 ```
 
-In this tibble, `id` defines a specific time point at which process usage was snapshotted, and the remaining columns show output from [ps::ps()](https://ps.r-lib.org/reference/ps.html). Notably, `pid` is the process ID, `ppid` is the process ID of the parent process, and `rss` is the resident set size (a measure of memory usage).
+These results are a bit more interesting than the sequential results from `Sys.sleep(1)`. Look closely at the `ppid`s for each `id`; after a snapshot or two, you'll see five identical `ppid`s for each `id`, and those `ppid`s match up with the remaining `pid` in the one remaining R process. This shows us that we've indeed distributed computations using forking in that that one remaining R process, the "parent," has spawned off five child processes from itself. 
 
-We can plot to get a better sense of how memory usage of these processes changes over time.
+We can plot the result to get a better sense of how memory usage of these processes changes over time.
 
 ```{r plot-mem, warning = FALSE}
 worker_ppid <- names(sort(-table(res_mem$ppid)))[1]
@@ -102,7 +111,7 @@ res_mem %>%
 
 At first, only the parent process has non-`NA` `rss`, as tidymodels hasn't sent data off to any workers yet. Then, each of the 5 workers receives data from tidymodels and begins fitting models. Eventually, each of those workers returns their results to the parent process, and their `rss` is once again `NA`. The parent process wraps up its computations before completing evaluation of the expression, at which point `syrup()` returns.
 
-Note that memory is weird; in the above plot, the total memory allotted to the parent session and its five workers at each ID is not simply the sum of those `rss` values, as memory is shared among them.
+Keep in mind: memory is weird. In the above plot, the total memory allotted to the parent session and its five workers at each ID is not simply the sum of those `rss` values, as memory is shared among them.
 
 ## Scope
 
