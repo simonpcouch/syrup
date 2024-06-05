@@ -73,18 +73,45 @@
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
-<p>We’ll demo using the package with an (admittedly dependency-heavy) example of tuning a regularized linear model against resamples. First, loading needed packages:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/simonpcouch/syrup" class="external-link">syrup</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://future.futureverse.org" class="external-link">future</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; Loading required package: bench</span></span></code></pre></div>
+<p>The main function in the syrup package is the function by the same name. The main argument to <code><a href="reference/syrup.html">syrup()</a></code> is an expression, and the function outputs a tibble. Supplying a rather boring expression:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/syrup.html">syrup</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.sleep.html" class="external-link">Sys.sleep</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A data frame: 6 × 6</span></span>
+<span><span class="co">#&gt;      id   pid  ppid name                 rss       vms</span></span>
+<span><span class="co">#&gt;   &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;          &lt;bch:byt&gt; &lt;bch:byt&gt;</span></span>
+<span><span class="co">#&gt; 1     1 66822 58354 rsession-arm64     313MB     393GB</span></span>
+<span><span class="co">#&gt; 2     1 66925 66822 R                  110MB     392GB</span></span>
+<span><span class="co">#&gt; 3     2 66822 58354 rsession-arm64     313MB     393GB</span></span>
+<span><span class="co">#&gt; 4     2 66925 66822 R                  110MB     392GB</span></span>
+<span><span class="co">#&gt; 5     3 66822 58354 rsession-arm64     313MB     393GB</span></span>
+<span><span class="co">#&gt; 6     3 66925 66822 R                  110MB     392GB</span></span></code></pre></div>
+<p>In this tibble, <code>id</code> defines a specific time point at which process usage was snapshotted, and the remaining columns show output from <a href="https://ps.r-lib.org/reference/ps.html" class="external-link">ps::ps()</a>. Notably, <code>pid</code> is the process ID, <code>ppid</code> is the process ID of the parent process, and <code>rss</code> is the resident set size (a measure of memory usage).</p>
+<p>The function works by:</p>
+<ul>
+<li>Setting up another R process <code>sesh</code> that queries memory information at a regular interval,</li>
+<li>Evaluating the supplied expression,</li>
+<li>Reading the memory information back into the main process from <code>sesh</code>,</li>
+<li>Closing <code>sesh</code>, and then</li>
+<li>Returning the memory information.</li>
+</ul>
+</div>
+<div class="section level2">
+<h2 id="application-model-tuning">Application: model tuning<a class="anchor" aria-label="anchor" href="#application-model-tuning"></a>
+</h2>
+<p>For a more interesting demo, we’ll tune a regularized linear model using cross-validation with tidymodels. First, loading needed packages:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://future.futureverse.org" class="external-link">future</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidymodels.tidymodels.org" class="external-link">tidymodels</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rlang.r-lib.org" class="external-link">rlang</a></span><span class="op">)</span></span></code></pre></div>
-<p>Using future to define our parallelism strategy, we’ll set <code>plan(multicore)</code>, indicating that we’d like to use forking with 5 workers. By default, future disables forking from RStudio; I know that, in the context of building this README, this usage of forking is safe, so I’ll temporarily override that default with <code>parallelly.fork.enable</code>.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<p>Using future to define our parallelism strategy, we’ll set <code>plan(multicore, workers = 5)</code>, indicating that we’d like to use forking with 5 workers. By default, future disables forking from RStudio; I know that, in the context of building this README, this usage of forking is safe, so I’ll temporarily override that default with <code>parallelly.fork.enable</code>.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rlang.r-lib.org/reference/local_options.html" class="external-link">local_options</a></span><span class="op">(</span>parallelly.fork.enable <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu">plan</span><span class="op">(</span><span class="va">multicore</span>, workers <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
 <p>Now, simulating some data:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu">sim_regression</span><span class="op">(</span><span class="fl">1000000</span><span class="op">)</span></span>
 <span></span>
@@ -109,8 +136,8 @@
 <span><span class="co">#&gt; #   predictor_14 &lt;dbl&gt;, predictor_15 &lt;dbl&gt;, predictor_16 &lt;dbl&gt;,</span></span>
 <span><span class="co">#&gt; #   predictor_17 &lt;dbl&gt;, predictor_18 &lt;dbl&gt;, predictor_19 &lt;dbl&gt;,</span></span>
 <span><span class="co">#&gt; #   predictor_20 &lt;dbl&gt;</span></span></code></pre></div>
-<p>The main function in the syrup package, <code><a href="reference/syrup.html">syrup()</a></code>, takes an expression as argument:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<p>The call to <code>tune_grid()</code> does some setup sequentially before sending data off to the five child processes to actually carry out the model fitting. After models are fitted, data is sent back to the parent process to be combined. To better understand memory usage throughout that process, we wrap the call in <code><a href="reference/syrup.html">syrup()</a></code>:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res_mem</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/syrup.html">syrup</a></span><span class="op">(</span><span class="op">{</span></span>
 <span>  <span class="va">res</span> <span class="op">&lt;-</span></span>
 <span>    <span class="fu">tune_grid</span><span class="op">(</span></span>
@@ -118,35 +145,26 @@
 <span>      <span class="va">outcome</span> <span class="op">~</span> <span class="va">.</span>,</span>
 <span>      <span class="fu">vfold_cv</span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
-<span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
-<p>The function works by:</p>
-<ul>
-<li>Setting up another R process <code>sesh</code> that queries system information at a regular interval,</li>
-<li>Evaluating the supplied expression,</li>
-<li>Reading the queried system information back into the main process from <code>sesh</code>,</li>
-<li>Closing <code>sesh</code>, and then</li>
-<li>Returning the queried system information.</li>
-</ul>
-<p>The output is a tibble:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">res_mem</span></span>
-<span><span class="co">#&gt; # A tibble: 60 × 6</span></span>
+<span><span class="op">}</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">res_mem</span></span>
+<span><span class="co">#&gt; # A tibble: 47 × 6</span></span>
 <span><span class="co">#&gt;       id   pid  ppid name                 rss       vms</span></span>
 <span><span class="co">#&gt;    &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;          &lt;bch:byt&gt; &lt;bch:byt&gt;</span></span>
-<span><span class="co">#&gt;  1     1 58494 58354 rsession-arm64  542.34MB     393GB</span></span>
-<span><span class="co">#&gt;  2     1 59643 58494 R                 1.08GB     393GB</span></span>
-<span><span class="co">#&gt;  3     2 58494 58354 rsession-arm64  542.34MB     393GB</span></span>
-<span><span class="co">#&gt;  4     2 59643 58494 R                 1.23GB     393GB</span></span>
-<span><span class="co">#&gt;  5     2 59660 59643 R               526.48MB     393GB</span></span>
-<span><span class="co">#&gt;  6     2 59661 59643 R               489.86MB     393GB</span></span>
-<span><span class="co">#&gt;  7     2 59662 59643 R                403.3MB     393GB</span></span>
-<span><span class="co">#&gt;  8     2 59663 59643 R               327.42MB     393GB</span></span>
-<span><span class="co">#&gt;  9     2 59664 59643 R               179.06MB     393GB</span></span>
-<span><span class="co">#&gt; 10     3 58494 58354 rsession-arm64  542.34MB     393GB</span></span>
-<span><span class="co">#&gt; # ℹ 50 more rows</span></span></code></pre></div>
-<p>In this tibble, <code>id</code> defines a specific time point at which process usage was snapshotted, and the remaining columns show output from <a href="https://ps.r-lib.org/reference/ps.html" class="external-link">ps::ps()</a>. Notably, <code>pid</code> is the process ID, <code>ppid</code> is the process ID of the parent process, and <code>rss</code> is the resident set size (a measure of memory usage).</p>
-<p>We can plot to get a better sense of how memory usage of these processes changes over time.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<span><span class="co">#&gt;  1     1 66822 58354 rsession-arm64  313.41MB     393GB</span></span>
+<span><span class="co">#&gt;  2     1 66925 66822 R                 1.15GB     393GB</span></span>
+<span><span class="co">#&gt;  3     2 66822 58354 rsession-arm64  313.41MB     393GB</span></span>
+<span><span class="co">#&gt;  4     2 66925 66822 R                 1.31GB     393GB</span></span>
+<span><span class="co">#&gt;  5     2 66947 66925 R               582.45MB     393GB</span></span>
+<span><span class="co">#&gt;  6     2 66948 66925 R               552.66MB     393GB</span></span>
+<span><span class="co">#&gt;  7     2 66949 66925 R               522.47MB     393GB</span></span>
+<span><span class="co">#&gt;  8     2 66950 66925 R               511.88MB     393GB</span></span>
+<span><span class="co">#&gt;  9     2 66951 66925 R               410.19MB     393GB</span></span>
+<span><span class="co">#&gt; 10     3 66822 58354 rsession-arm64  313.41MB     393GB</span></span>
+<span><span class="co">#&gt; # ℹ 37 more rows</span></span></code></pre></div>
+<p>These results are a bit more interesting than the sequential results from <code>Sys.sleep(1)</code>. Look closely at the <code>ppid</code>s for each <code>id</code>; after a snapshot or two, you’ll see five identical <code>ppid</code>s for each <code>id</code>, and those <code>ppid</code>s match up with the remaining <code>pid</code> in the one remaining R process. This shows us that we’ve indeed distributed computations using forking in that that one remaining R process, the “parent,” has spawned off five child processes from itself.</p>
+<p>We can plot the result to get a better sense of how memory usage of these processes changes over time.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">worker_ppid</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">res_mem</span><span class="op">$</span><span class="va">ppid</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
 <span></span>
 <span><span class="va">res_mem</span> <span class="op">%&gt;%</span></span>
@@ -157,7 +175,7 @@
 <span>  <span class="fu">scale_x_continuous</span><span class="op">(</span>breaks <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">res_mem</span><span class="op">$</span><span class="va">id</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-plot-mem-1.png" width="100%"></p>
 <p>At first, only the parent process has non-<code>NA</code> <code>rss</code>, as tidymodels hasn’t sent data off to any workers yet. Then, each of the 5 workers receives data from tidymodels and begins fitting models. Eventually, each of those workers returns their results to the parent process, and their <code>rss</code> is once again <code>NA</code>. The parent process wraps up its computations before completing evaluation of the expression, at which point <code><a href="reference/syrup.html">syrup()</a></code> returns.</p>
-<p>Note that memory is weird; in the above plot, the total memory allotted to the parent session and its five workers at each ID is not simply the sum of those <code>rss</code> values, as memory is shared among them.</p>
+<p>Keep in mind: memory is weird. In the above plot, the total memory allotted to the parent session and its five workers at each ID is not simply the sum of those <code>rss</code> values, as memory is shared among them.</p>
 </div>
 <div class="section level2">
 <h2 id="scope">Scope<a class="anchor" aria-label="anchor" href="#scope"></a>
