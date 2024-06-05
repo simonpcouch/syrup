@@ -19,7 +19,6 @@ knitr::opts_chunk$set(
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![CRAN status](https://www.r-pkg.org/badges/version/syrup)](https://CRAN.R-project.org/package=syrup)
 [![R-CMD-check](https://github.com/simonpcouch/syrup/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/simonpcouch/syrup/actions/workflows/R-CMD-check.yaml)
-[![Codecov test coverage](https://codecov.io/gh/simonpcouch/syrup/branch/main/graph/badge.svg)](https://app.codecov.io/gh/simonpcouch/syrup?branch=main)
 <!-- badges: end -->
 
 The goal of syrup is to coarsely measure memory usage of R code run in parallel by regularly taking snapshots of calls to the system command `ps`. The package name is an homage to syrupy (**SY**stem **R**esource **U**sage **P**rofile ...um, **Y**eah), a Python tool at [jeetsukumaran/Syrupy](https://github.com/jeetsukumaran/Syrupy). **This package is highly experimental and results ought to be interpreted with caution.**
