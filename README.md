@@ -9,6 +9,9 @@
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/syrup)](https://CRAN.R-project.org/package=syrup)
+[![R-CMD-check](https://github.com/simonpcouch/syrup/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/simonpcouch/syrup/actions/workflows/R-CMD-check.yaml)
+[![Codecov test
+coverage](https://codecov.io/gh/simonpcouch/syrup/branch/main/graph/badge.svg)](https://app.codecov.io/gh/simonpcouch/syrup?branch=main)
 <!-- badges: end -->
 
 The goal of syrup is to coarsely measure memory usage of R code run in
@@ -108,20 +111,20 @@ The output is a tibble:
 
 ``` r
 res_mem
-#> # A tibble: 62 × 6
+#> # A tibble: 60 × 6
 #>       id   pid  ppid name                 rss       vms
 #>    <dbl> <int> <int> <chr>          <bch:byt> <bch:byt>
-#>  1     1 27434 23379 rsession-arm64      88MB     392GB
-#>  2     1 35014 23379 rsession-arm64  353.47MB     393GB
-#>  3     1 35413 35014 R                 1.06GB     393GB
-#>  4     2 27434 23379 rsession-arm64      88MB     392GB
-#>  5     2 35014 23379 rsession-arm64  353.47MB     393GB
-#>  6     2 35413 35014 R                 1.14GB     393GB
-#>  7     2 35430 35413 R               533.92MB     393GB
-#>  8     2 35431 35413 R               527.83MB     393GB
-#>  9     2 35432 35413 R               487.28MB     393GB
-#> 10     2 35433 35413 R                441.8MB     393GB
-#> # ℹ 52 more rows
+#>  1     1 58494 58354 rsession-arm64  542.34MB     393GB
+#>  2     1 59643 58494 R                 1.08GB     393GB
+#>  3     2 58494 58354 rsession-arm64  542.34MB     393GB
+#>  4     2 59643 58494 R                 1.23GB     393GB
+#>  5     2 59660 59643 R               526.48MB     393GB
+#>  6     2 59661 59643 R               489.86MB     393GB
+#>  7     2 59662 59643 R                403.3MB     393GB
+#>  8     2 59663 59643 R               327.42MB     393GB
+#>  9     2 59664 59643 R               179.06MB     393GB
+#> 10     3 58494 58354 rsession-arm64  542.34MB     393GB
+#> # ℹ 50 more rows
 ```
 
 In this tibble, `id` defines a specific time point at which process
