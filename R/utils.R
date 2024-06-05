@@ -1,6 +1,6 @@
 # a reinterpretation of ps() that returns all available memory
 # information and doesn't convert to tibble when returning
-ps_r_processes <- function(exclude = NULL, id) {
+ps_r_processes <- function(id) {
   # can have no unstated dependencies in the separate process, so inline where needed
   fallback <- function(expr, alternative) {
     tryCatch(
@@ -21,7 +21,6 @@ ps_r_processes <- function(exclude = NULL, id) {
 
   # retain only R-ish processes
   r_ish <- nm == "R" | grepl("rsession", nm)
-  if (!is.null(exclude)) {r_ish <- r_ish[r_ish != exclude]}
 
   processes <- processes[r_ish]
   nm <- nm[r_ish]

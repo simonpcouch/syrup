@@ -85,13 +85,13 @@ syrup <- function(expr, interval = .5, peak = FALSE, env = caller_env()) {
   sesh$call(
     function(interval, keep_going_file, ps_r_processes, exclude, peak) {
       id <- 1
-      res <- ps_r_processes(exclude = exclude, id = id)
+      res <- ps_r_processes(id = id)
       current_peak <- sum(res$rss, na.rm = TRUE)
 
       while (file.exists(keep_going_file)) {
         id <- id + 1
         Sys.sleep(interval)
-        new_res <- ps_r_processes(exclude = exclude, id = id)
+        new_res <- ps_r_processes(id = id)
         if (peak) {
           new_peak <- sum(new_res$rss, na.rm = TRUE)
           if (new_peak > current_peak) {
@@ -109,7 +109,6 @@ syrup <- function(expr, interval = .5, peak = FALSE, env = caller_env()) {
       interval = interval,
       keep_going_file = keep_going_file,
       ps_r_processes = ps_r_processes,
-      exclude = sesh$get_pid(),
       peak = peak
     )
   )
