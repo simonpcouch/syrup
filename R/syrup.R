@@ -79,6 +79,7 @@ syrup <- function(expr, interval = .5, peak = FALSE, env = caller_env()) {
   # communicate with `sesh` through existence of a tempfile:
   keep_going_file <- tempfile()
   file.create(keep_going_file)
+  withr::defer(if (file.exists(keep_going_file)) file.remove(keep_going_file))
 
   # regularly take snapshots of memory usage of R sessions
   sesh$call(
