@@ -45,7 +45,7 @@ the \href{https://github.com/r-prof}{R-prof} GitHub organization.
 Loosely, the function works by:
 \itemize{
 \item Setting up another R process (call it \code{sesh}) that queries system
-information using \code{ps::ps()} at a regular interval,
+information using \code{\link[ps:ps]{ps::ps()}} at a regular interval,
 \item Evaluating the supplied expression,
 \item Reading the queried system information back into the main process from \code{sesh},
 \item Closing \code{sesh}, and then
