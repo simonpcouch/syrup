@@ -56,7 +56,8 @@ test_that("syrup(interval) works", {
     )
   )
 
-  expect_s3_class(res, "tbl_df")
+  expect_s3_class(res_01, "tbl_df")
+  expect_s3_class(res_1, "tbl_df")
   expect_true(length(unique(res_01$id)) > length(unique(res_1$id)))
 })
 
