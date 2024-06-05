@@ -33,6 +33,15 @@
 #' @export
 syrup <- function(expr, interval = .5, peak = FALSE, env = caller_env()) {
   expr <- substitute(expr)
+  if (!is_double(interval, n = 1, finite = TRUE)) {
+    abort("`interval` must be a single, finite numeric.")
+  }
+  if (!is_bool(peak)) {
+    abort("`peak` must be `TRUE` or `FALSE`.")
+  }
+  if (!is_environment(env)) {
+    abort("`env` must be an environment.")
+  }
 
   # create a new temporary R session `sesh`
   sesh <- callr::r_session$new()

@@ -58,6 +58,14 @@ test_that("syrup(interval) works", {
   expect_true(length(unique(res_01$id)) > length(unique(res_1$id)))
 })
 
+test_that("syrup does basic type checks", {
+  # the rlang type check standalone is probably overkill for this project,
+  # but some simple type checks should still be helpful.
+  expect_snapshot(error = TRUE, syrup(1, interval = "boop"))
+  expect_snapshot(error = TRUE, syrup(1, peak = "no"))
+  expect_snapshot(error = TRUE, syrup(1, env = "schmenv"))
+})
+
 test_that("syrup warns with only one ID", {
   expect_snapshot_warning(syrup(1))
 })
