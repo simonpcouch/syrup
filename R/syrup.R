@@ -17,19 +17,48 @@
 #' @param env The environment to evaluate `expr` in.
 #'
 #' @returns A tibble with column `id` and a number of columns from
-#' `ps::ps()` output describing memory usage. Notably, the process ID `pid`,
+#' [ps::ps()] output describing memory usage. Notably, the process ID `pid`,
 #' parent process ID `ppid`, and resident set size `rss` (a measure of memory
 #' usage).
 #'
-#' @examplesIf FALSE
+#' @details
+#' There's nothing specific about this function that necessitates the provided
+#' expression is run in parallel. Said another way, `syrup()` will work just fine
+#' with "normal," sequentially-run R code (as in the examples). That said,
+#' there are many better, more fine-grained tools for the job in the case of
+#' sequential R code, such as [Rprofmem()], the
+#' [profmem](https://cran.r-project.org/web/packages/profmem/vignettes/profmem.html)
+#' package, the [bench][bench::mark()] package, and packages in
+#' the [R-prof](https://github.com/r-prof) GitHub organization.
+#'
+#' Loosely, the function works by:
+#'
+#' * Setting up another R process (call it `sesh`) that queries system
+#'   information using [ps::ps()] at a regular interval,
+#' * Evaluating the supplied expression,
+#' * Reading the queried system information back into the main process from `sesh`,
+#' * Closing `sesh`, and then
+#' * Returning the queried system information.
+#'
+#' Note that information on the R process `sesh` is filtered out from the results
+#' automatically.
+#'
+#' @examplesIf ps::ps_os_type()[["POSIX"]]
+#' # pass any expression to syrup. first, sequentially:
 #' res_syrup <- syrup({res_output <- Sys.sleep(1)})
 #'
 #' res_syrup
 #'
+#' # to snapshot memory information more (or less) often, set `interval`
 #' syrup(Sys.sleep(1), interval = .01)
 #'
+#' # use `peak = TRUE` to return only the snapshot with
+#' # the highest memory usage (as `sum(rss)`)
 #' syrup(Sys.sleep(1), interval = .01, peak = TRUE)
 #'
+#' # results from syrup are more---or maybe only---useful when
+#' # computations are evaluated in parallel. see package README
+#' # for an example.
 #' @export
 syrup <- function(expr, interval = .5, peak = FALSE, env = caller_env()) {
   expr <- substitute(expr)

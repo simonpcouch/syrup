@@ -21,7 +21,7 @@ processes so that the tibble doesn't grow too large.}
 }
 \value{
 A tibble with column \code{id} and a number of columns from
-\code{ps::ps()} output describing memory usage. Notably, the process ID \code{pid},
+\code{\link[ps:ps]{ps::ps()}} output describing memory usage. Notably, the process ID \code{pid},
 parent process ID \code{ppid}, and resident set size \code{rss} (a measure of memory
 usage).
 }
@@ -32,14 +32,45 @@ By taking snapshots the memory usage of R processes at a regular \code{interval}
 the function dynamically builds up a  profile of their usage of system
 resources.
 }
+\details{
+There's nothing specific about this function that necessitates the provided
+expression is run in parallel. Said another way, \code{syrup()} will work just fine
+with "normal," sequentially-run R code (as in the examples). That said,
+there are many better, more fine-grained tools for the job in the case of
+sequential R code, such as \code{\link[=Rprofmem]{Rprofmem()}}, the
+\href{https://cran.r-project.org/web/packages/profmem/vignettes/profmem.html}{profmem}
+package, the \link[bench:mark]{bench} package, and packages in
+the \href{https://github.com/r-prof}{R-prof} GitHub organization.
+
+Loosely, the function works by:
+\itemize{
+\item Setting up another R process (call it \code{sesh}) that queries system
+information using \code{ps::ps()} at a regular interval,
+\item Evaluating the supplied expression,
+\item Reading the queried system information back into the main process from \code{sesh},
+\item Closing \code{sesh}, and then
+\item Returning the queried system information.
+}
+
+Note that information on the R process \code{sesh} is filtered out from the results
+automatically.
+}
 \examples{
-\dontshow{if (FALSE) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (ps::ps_os_type()[["POSIX"]]) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+# pass any expression to syrup. first, sequentially:
 res_syrup <- syrup({res_output <- Sys.sleep(1)})
 
 res_syrup
 
+# to snapshot memory information more (or less) often, set `interval`
 syrup(Sys.sleep(1), interval = .01)
 
+# use `peak = TRUE` to return only the snapshot with
+# the highest memory usage (as `sum(rss)`)
 syrup(Sys.sleep(1), interval = .01, peak = TRUE)
+
+# results from syrup are more---or maybe only---useful when
+# computations are evaluated in parallel. see package README
+# for an example.
 \dontshow{\}) # examplesIf}
 }
