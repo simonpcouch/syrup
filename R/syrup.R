@@ -136,6 +136,8 @@ syrup <- function(expr, interval = .5, peak = FALSE, env = caller_env()) {
     ))
   }
 
+  res <- mutate_pct_cpu(res)
+
   res
 }
 
