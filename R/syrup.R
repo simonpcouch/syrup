@@ -16,7 +16,7 @@
 #' processes so that the tibble doesn't grow too large.
 #' @param env The environment to evaluate `expr` in.
 #'
-#' @returns A tibble with column `id` and a number of columns from
+#' @returns A tibble with columns `id` and `time` and a number of columns from
 #' [ps::ps()] output describing memory usage. Notably, the process ID `pid`,
 #' parent process ID `ppid`, and resident set size `rss` (a measure of memory
 #' usage).

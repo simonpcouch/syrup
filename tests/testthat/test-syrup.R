@@ -15,7 +15,7 @@ test_that("syrup works", {
 
   expect_s3_class(res, "tbl_df")
 
-  expect_named(res, c("id", "pid", "ppid", "name", "rss", "vms"))
+  expect_named(res, c("id", "time", "pid", "ppid", "name", "rss", "vms"))
   expect_gte(nrow(res), 1)
   expect_equal(unique(res$id), 1:max(res$id, na.rm = TRUE))
   expect_type(res$pid, "integer")

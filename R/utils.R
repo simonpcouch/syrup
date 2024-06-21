@@ -38,6 +38,7 @@ ps_r_processes <- function(id) {
   tibble::new_tibble(
     list(
       id = rep(id, length(pd)),
+      time = rep(Sys.time(), length(pd)),
       pid = pd, ppid = pp, name = nm, rss = rss, vms = vms
     )
   )
