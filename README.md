@@ -7,6 +7,8 @@
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/syrup)](https://CRAN.R-project.org/package=syrup)
 [![R-CMD-check](https://github.com/simonpcouch/syrup/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/simonpcouch/syrup/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
@@ -39,15 +41,18 @@ outputs a tibble. Supplying a rather boring expression:
 
 ``` r
 syrup(Sys.sleep(1))
-#> # A data frame: 6 × 6
-#>      id   pid  ppid name                 rss       vms
-#>   <dbl> <int> <int> <chr>          <bch:byt> <bch:byt>
-#> 1     1 66822 58354 rsession-arm64     313MB     393GB
-#> 2     1 66925 66822 R                  110MB     392GB
-#> 3     2 66822 58354 rsession-arm64     313MB     393GB
-#> 4     2 66925 66822 R                  110MB     392GB
-#> 5     3 66822 58354 rsession-arm64     313MB     393GB
-#> 6     3 66925 66822 R                  110MB     392GB
+#> # A tibble: 9 × 8
+#>      id time                  pid  ppid name              pct_cpu      rss   vms
+#>   <dbl> <dttm>              <int> <int> <chr>               <dbl> <bch:by> <bch>
+#> 1     1 2024-06-21 16:19:16 97299 97184 R              NA          113.7MB 392GB
+#> 2     1 2024-06-21 16:19:16 97184 92899 rsession-arm64 NA          307.3MB 393GB
+#> 3     1 2024-06-21 16:19:16 77045 76803 rsession-arm64 NA           87.2MB 394GB
+#> 4     2 2024-06-21 16:19:16 97299 97184 R               0          113.7MB 392GB
+#> 5     2 2024-06-21 16:19:16 97184 92899 rsession-arm64  0.000264   307.3MB 393GB
+#> 6     2 2024-06-21 16:19:16 77045 76803 rsession-arm64  0.0000705   87.2MB 394GB
+#> 7     3 2024-06-21 16:19:17 97299 97184 R               0.0000110  113.7MB 392GB
+#> 8     3 2024-06-21 16:19:17 97184 92899 rsession-arm64  0.000279   307.3MB 393GB
+#> 9     3 2024-06-21 16:19:17 77045 76803 rsession-arm64  0.0000706   87.2MB 394GB
 ```
 
 In this tibble, `id` defines a specific time point at which process
@@ -134,20 +139,20 @@ res_mem <- syrup({
 })
 
 res_mem
-#> # A tibble: 47 × 6
-#>       id   pid  ppid name                 rss       vms
-#>    <dbl> <int> <int> <chr>          <bch:byt> <bch:byt>
-#>  1     1 66822 58354 rsession-arm64  313.41MB     393GB
-#>  2     1 66925 66822 R                 1.15GB     393GB
-#>  3     2 66822 58354 rsession-arm64  313.41MB     393GB
-#>  4     2 66925 66822 R                 1.31GB     393GB
-#>  5     2 66947 66925 R               582.45MB     393GB
-#>  6     2 66948 66925 R               552.66MB     393GB
-#>  7     2 66949 66925 R               522.47MB     393GB
-#>  8     2 66950 66925 R               511.88MB     393GB
-#>  9     2 66951 66925 R               410.19MB     393GB
-#> 10     3 66822 58354 rsession-arm64  313.41MB     393GB
-#> # ℹ 37 more rows
+#> # A tibble: 63 × 8
+#>       id time                  pid  ppid name             pct_cpu      rss   vms
+#>    <dbl> <dttm>              <int> <int> <chr>              <dbl> <bch:by> <bch>
+#>  1     1 2024-06-21 16:19:20 97299 97184 R               NA         1.14GB 393GB
+#>  2     1 2024-06-21 16:19:20 97184 92899 rsession-arm64  NA       307.28MB 393GB
+#>  3     1 2024-06-21 16:19:20 77045 76803 rsession-arm64  NA        87.22MB 394GB
+#>  4     2 2024-06-21 16:19:21 97327 97299 R               NA       569.45MB 393GB
+#>  5     2 2024-06-21 16:19:21 97326 97299 R               NA       580.41MB 393GB
+#>  6     2 2024-06-21 16:19:21 97325 97299 R               NA       579.05MB 393GB
+#>  7     2 2024-06-21 16:19:21 97324 97299 R               NA       589.11MB 393GB
+#>  8     2 2024-06-21 16:19:21 97323 97299 R               NA       608.23MB 393GB
+#>  9     2 2024-06-21 16:19:21 97299 97184 R                1.53e-2   1.32GB 393GB
+#> 10     2 2024-06-21 16:19:21 97184 92899 rsession-arm64   6.76e-5 307.28MB 393GB
+#> # ℹ 53 more rows
 ```
 
 These results are a bit more interesting than the sequential results
