@@ -79,15 +79,18 @@
 <p>The main function in the syrup package is the function by the same name. The main argument to <code><a href="reference/syrup.html">syrup()</a></code> is an expression, and the function outputs a tibble. Supplying a rather boring expression:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/syrup.html">syrup</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.sleep.html" class="external-link">Sys.sleep</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A data frame: 6 × 6</span></span>
-<span><span class="co">#&gt;      id   pid  ppid name                 rss       vms</span></span>
-<span><span class="co">#&gt;   &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;          &lt;bch:byt&gt; &lt;bch:byt&gt;</span></span>
-<span><span class="co">#&gt; 1     1 66822 58354 rsession-arm64     313MB     393GB</span></span>
-<span><span class="co">#&gt; 2     1 66925 66822 R                  110MB     392GB</span></span>
-<span><span class="co">#&gt; 3     2 66822 58354 rsession-arm64     313MB     393GB</span></span>
-<span><span class="co">#&gt; 4     2 66925 66822 R                  110MB     392GB</span></span>
-<span><span class="co">#&gt; 5     3 66822 58354 rsession-arm64     313MB     393GB</span></span>
-<span><span class="co">#&gt; 6     3 66925 66822 R                  110MB     392GB</span></span></code></pre></div>
+<span><span class="co">#&gt; # A tibble: 9 × 8</span></span>
+<span><span class="co">#&gt;      id time                  pid  ppid name              pct_cpu      rss   vms</span></span>
+<span><span class="co">#&gt;   &lt;dbl&gt; &lt;dttm&gt;              &lt;int&gt; &lt;int&gt; &lt;chr&gt;               &lt;dbl&gt; &lt;bch:by&gt; &lt;bch&gt;</span></span>
+<span><span class="co">#&gt; 1     1 2024-06-21 16:19:16 97299 97184 R              NA          113.7MB 392GB</span></span>
+<span><span class="co">#&gt; 2     1 2024-06-21 16:19:16 97184 92899 rsession-arm64 NA          307.3MB 393GB</span></span>
+<span><span class="co">#&gt; 3     1 2024-06-21 16:19:16 77045 76803 rsession-arm64 NA           87.2MB 394GB</span></span>
+<span><span class="co">#&gt; 4     2 2024-06-21 16:19:16 97299 97184 R               0          113.7MB 392GB</span></span>
+<span><span class="co">#&gt; 5     2 2024-06-21 16:19:16 97184 92899 rsession-arm64  0.000264   307.3MB 393GB</span></span>
+<span><span class="co">#&gt; 6     2 2024-06-21 16:19:16 77045 76803 rsession-arm64  0.0000705   87.2MB 394GB</span></span>
+<span><span class="co">#&gt; 7     3 2024-06-21 16:19:17 97299 97184 R               0.0000110  113.7MB 392GB</span></span>
+<span><span class="co">#&gt; 8     3 2024-06-21 16:19:17 97184 92899 rsession-arm64  0.000279   307.3MB 393GB</span></span>
+<span><span class="co">#&gt; 9     3 2024-06-21 16:19:17 77045 76803 rsession-arm64  0.0000706   87.2MB 394GB</span></span></code></pre></div>
 <p>In this tibble, <code>id</code> defines a specific time point at which process usage was snapshotted, and the remaining columns show output from <a href="https://ps.r-lib.org/reference/ps.html" class="external-link">ps::ps()</a>. Notably, <code>pid</code> is the process ID, <code>ppid</code> is the process ID of the parent process, and <code>rss</code> is the resident set size (a measure of memory usage).</p>
 <p>The function works by:</p>
 <ul>
@@ -148,20 +151,20 @@
 <span><span class="op">}</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">res_mem</span></span>
-<span><span class="co">#&gt; # A tibble: 47 × 6</span></span>
-<span><span class="co">#&gt;       id   pid  ppid name                 rss       vms</span></span>
-<span><span class="co">#&gt;    &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;          &lt;bch:byt&gt; &lt;bch:byt&gt;</span></span>
-<span><span class="co">#&gt;  1     1 66822 58354 rsession-arm64  313.41MB     393GB</span></span>
-<span><span class="co">#&gt;  2     1 66925 66822 R                 1.15GB     393GB</span></span>
-<span><span class="co">#&gt;  3     2 66822 58354 rsession-arm64  313.41MB     393GB</span></span>
-<span><span class="co">#&gt;  4     2 66925 66822 R                 1.31GB     393GB</span></span>
-<span><span class="co">#&gt;  5     2 66947 66925 R               582.45MB     393GB</span></span>
-<span><span class="co">#&gt;  6     2 66948 66925 R               552.66MB     393GB</span></span>
-<span><span class="co">#&gt;  7     2 66949 66925 R               522.47MB     393GB</span></span>
-<span><span class="co">#&gt;  8     2 66950 66925 R               511.88MB     393GB</span></span>
-<span><span class="co">#&gt;  9     2 66951 66925 R               410.19MB     393GB</span></span>
-<span><span class="co">#&gt; 10     3 66822 58354 rsession-arm64  313.41MB     393GB</span></span>
-<span><span class="co">#&gt; # ℹ 37 more rows</span></span></code></pre></div>
+<span><span class="co">#&gt; # A tibble: 63 × 8</span></span>
+<span><span class="co">#&gt;       id time                  pid  ppid name             pct_cpu      rss   vms</span></span>
+<span><span class="co">#&gt;    &lt;dbl&gt; &lt;dttm&gt;              &lt;int&gt; &lt;int&gt; &lt;chr&gt;              &lt;dbl&gt; &lt;bch:by&gt; &lt;bch&gt;</span></span>
+<span><span class="co">#&gt;  1     1 2024-06-21 16:19:20 97299 97184 R               NA         1.14GB 393GB</span></span>
+<span><span class="co">#&gt;  2     1 2024-06-21 16:19:20 97184 92899 rsession-arm64  NA       307.28MB 393GB</span></span>
+<span><span class="co">#&gt;  3     1 2024-06-21 16:19:20 77045 76803 rsession-arm64  NA        87.22MB 394GB</span></span>
+<span><span class="co">#&gt;  4     2 2024-06-21 16:19:21 97327 97299 R               NA       569.45MB 393GB</span></span>
+<span><span class="co">#&gt;  5     2 2024-06-21 16:19:21 97326 97299 R               NA       580.41MB 393GB</span></span>
+<span><span class="co">#&gt;  6     2 2024-06-21 16:19:21 97325 97299 R               NA       579.05MB 393GB</span></span>
+<span><span class="co">#&gt;  7     2 2024-06-21 16:19:21 97324 97299 R               NA       589.11MB 393GB</span></span>
+<span><span class="co">#&gt;  8     2 2024-06-21 16:19:21 97323 97299 R               NA       608.23MB 393GB</span></span>
+<span><span class="co">#&gt;  9     2 2024-06-21 16:19:21 97299 97184 R                1.53e-2   1.32GB 393GB</span></span>
+<span><span class="co">#&gt; 10     2 2024-06-21 16:19:21 97184 92899 rsession-arm64   6.76e-5 307.28MB 393GB</span></span>
+<span><span class="co">#&gt; # ℹ 53 more rows</span></span></code></pre></div>
 <p>These results are a bit more interesting than the sequential results from <code>Sys.sleep(1)</code>. Look closely at the <code>ppid</code>s for each <code>id</code>; after a snapshot or two, you’ll see five identical <code>ppid</code>s for each <code>id</code>, and those <code>ppid</code>s match up with the remaining <code>pid</code> in the one remaining R process. This shows us that we’ve indeed distributed computations using forking in that that one remaining R process, the “parent,” has spawned off five child processes from itself.</p>
 <p>We can plot the result to get a better sense of how memory usage of these processes changes over time.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
@@ -220,6 +223,7 @@
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
+<li><a href="https://CRAN.R-project.org/package=syrup" class="external-link"><img src="https://www.r-pkg.org/badges/version/syrup" alt="CRAN status"></a></li>
 <li><a href="https://github.com/simonpcouch/syrup/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/simonpcouch/syrup/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
 </ul>
 </div>
