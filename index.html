@@ -5,14 +5,14 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="Coarsely measures memory usage of R code run in parallel by regularly taking snapshots of calls to the system command ps.">
-<title>Measure Memory Usage for Parallel R Code • syrup</title>
+<meta name="description" content="Measures memory and CPU usage of R code by regularly taking snapshots of calls to the system command ps. The package provides an entry point (albeit coarse) to profile usage of system resources by R code run in parallel.">
+<title>Measure Memory and CPU Usage for Parallel R Code • syrup</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js" integrity="sha512-7O5pXpc0oCRrxk8RUfDYFgn0nO1t+jLuIOQdOMRp4APB7uZ4vSjspzp5y6YDtDs4VzUSTbWzBFZ/LKJhnyFOKw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Measure Memory Usage for Parallel R Code">
-<meta property="og:description" content="Coarsely measures memory usage of R code run in parallel by regularly taking snapshots of calls to the system command ps.">
+<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js" integrity="sha512-7O5pXpc0oCRrxk8RUfDYFgn0nO1t+jLuIOQdOMRp4APB7uZ4vSjspzp5y6YDtDs4VzUSTbWzBFZ/LKJhnyFOKw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Measure Memory and CPU Usage for Parallel R Code">
+<meta property="og:description" content="Measures memory and CPU usage of R code by regularly taking snapshots of calls to the system command ps. The package provides an entry point (albeit coarse) to profile usage of system resources by R code run in parallel.">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -62,7 +62,8 @@
 </h1></div>
 <!-- badges: start -->
 
-<p>The goal of syrup is to coarsely measure memory usage of R code run in parallel by regularly taking snapshots of calls to the system command <code>ps</code>. The package name is an homage to syrupy (<strong>SY</strong>stem <strong>R</strong>esource <strong>U</strong>sage <strong>P</strong>rofile …um, <strong>Y</strong>eah), a Python tool at <a href="https://github.com/jeetsukumaran/Syrupy" class="external-link">jeetsukumaran/Syrupy</a>. <strong>This package is highly experimental and results ought to be interpreted with caution.</strong></p>
+<p>The goal of syrup is to measure memory and CPU usage of R code by regularly taking snapshots of calls to the system command <code>ps</code>. The package provides an entry point (albeit coarse) to profile usage of system resources by R code run in parallel.</p>
+<p>The package name is an homage to syrupy (<strong>SY</strong>stem <strong>R</strong>esource <strong>U</strong>sage <strong>P</strong>rofile …um, <strong>Y</strong>eah), a Python tool at <a href="https://github.com/jeetsukumaran/Syrupy" class="external-link">jeetsukumaran/Syrupy</a>.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -82,16 +83,16 @@
 <span><span class="co">#&gt; # A tibble: 48 × 8</span></span>
 <span><span class="co">#&gt;       id time                  pid  ppid name           pct_cpu       rss    vms</span></span>
 <span><span class="co">#&gt;    &lt;dbl&gt; &lt;dttm&gt;              &lt;int&gt; &lt;int&gt; &lt;chr&gt;            &lt;dbl&gt; &lt;bch:byt&gt; &lt;bch:&gt;</span></span>
-<span><span class="co">#&gt;  1     1 2024-07-03 09:27:42 61387 60522 R                   NA     114MB  392GB</span></span>
-<span><span class="co">#&gt;  2     1 2024-07-03 09:27:42 60522 60300 rsession-arm64      NA     848MB  394GB</span></span>
-<span><span class="co">#&gt;  3     1 2024-07-03 09:27:42 58919     1 R                   NA     771MB  393GB</span></span>
-<span><span class="co">#&gt;  4     1 2024-07-03 09:27:42 97009     1 rsession-arm64      NA     240KB  394GB</span></span>
-<span><span class="co">#&gt;  5     1 2024-07-03 09:27:42 97008     1 rsession-arm64      NA     240KB  394GB</span></span>
-<span><span class="co">#&gt;  6     1 2024-07-03 09:27:42 97007     1 rsession-arm64      NA     240KB  394GB</span></span>
-<span><span class="co">#&gt;  7     1 2024-07-03 09:27:42 97006     1 rsession-arm64      NA     240KB  394GB</span></span>
-<span><span class="co">#&gt;  8     1 2024-07-03 09:27:42 97005     1 rsession-arm64      NA     240KB  394GB</span></span>
-<span><span class="co">#&gt;  9     1 2024-07-03 09:27:42 91012     1 R                   NA     160KB  393GB</span></span>
-<span><span class="co">#&gt; 10     1 2024-07-03 09:27:42 90999     1 R                   NA     160KB  393GB</span></span>
+<span><span class="co">#&gt;  1     1 2024-07-03 09:50:45 62041 60522 R                   NA     113MB  392GB</span></span>
+<span><span class="co">#&gt;  2     1 2024-07-03 09:50:45 60522 60300 rsession-arm64      NA     991MB  394GB</span></span>
+<span><span class="co">#&gt;  3     1 2024-07-03 09:50:45 58919     1 R                   NA     873MB  393GB</span></span>
+<span><span class="co">#&gt;  4     1 2024-07-03 09:50:45 97009     1 rsession-arm64      NA     240KB  394GB</span></span>
+<span><span class="co">#&gt;  5     1 2024-07-03 09:50:45 97008     1 rsession-arm64      NA     240KB  394GB</span></span>
+<span><span class="co">#&gt;  6     1 2024-07-03 09:50:45 97007     1 rsession-arm64      NA     240KB  394GB</span></span>
+<span><span class="co">#&gt;  7     1 2024-07-03 09:50:45 97006     1 rsession-arm64      NA     240KB  394GB</span></span>
+<span><span class="co">#&gt;  8     1 2024-07-03 09:50:45 97005     1 rsession-arm64      NA     240KB  394GB</span></span>
+<span><span class="co">#&gt;  9     1 2024-07-03 09:50:45 91012     1 R                   NA     160KB  393GB</span></span>
+<span><span class="co">#&gt; 10     1 2024-07-03 09:50:45 90999     1 R                   NA     160KB  393GB</span></span>
 <span><span class="co">#&gt; # ℹ 38 more rows</span></span></code></pre></div>
 <p>In this tibble, <code>id</code> defines a specific time point at which process usage was snapshotted, and the remaining columns show output derived from <a href="https://ps.r-lib.org/reference/ps.html" class="external-link">ps::ps()</a>. Notably, <code>pid</code> is the process ID, <code>ppid</code> is the process ID of the parent process, <code>pct_cpu</code> is the percent CPU usage, and <code>rss</code> is the resident set size (a measure of memory usage).</p>
 <p>The function works by:</p>
@@ -153,22 +154,22 @@
 <span><span class="op">}</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">res_mem</span></span>
-<span><span class="co">#&gt; # A tibble: 158 × 8</span></span>
+<span><span class="co">#&gt; # A tibble: 138 × 8</span></span>
 <span><span class="co">#&gt;       id time                  pid  ppid name           pct_cpu       rss    vms</span></span>
 <span><span class="co">#&gt;    &lt;dbl&gt; &lt;dttm&gt;              &lt;int&gt; &lt;int&gt; &lt;chr&gt;            &lt;dbl&gt; &lt;bch:byt&gt; &lt;bch:&gt;</span></span>
-<span><span class="co">#&gt;  1     1 2024-07-03 09:27:46 61387 60522 R                   NA       1GB  393GB</span></span>
-<span><span class="co">#&gt;  2     1 2024-07-03 09:27:46 60522 60300 rsession-arm64      NA     848MB  394GB</span></span>
-<span><span class="co">#&gt;  3     1 2024-07-03 09:27:46 58919     1 R                   NA     771MB  393GB</span></span>
-<span><span class="co">#&gt;  4     1 2024-07-03 09:27:46 97009     1 rsession-arm64      NA     240KB  394GB</span></span>
-<span><span class="co">#&gt;  5     1 2024-07-03 09:27:46 97008     1 rsession-arm64      NA     240KB  394GB</span></span>
-<span><span class="co">#&gt;  6     1 2024-07-03 09:27:46 97007     1 rsession-arm64      NA     240KB  394GB</span></span>
-<span><span class="co">#&gt;  7     1 2024-07-03 09:27:46 97006     1 rsession-arm64      NA     240KB  394GB</span></span>
-<span><span class="co">#&gt;  8     1 2024-07-03 09:27:46 97005     1 rsession-arm64      NA     240KB  394GB</span></span>
-<span><span class="co">#&gt;  9     1 2024-07-03 09:27:46 91012     1 R                   NA     160KB  393GB</span></span>
-<span><span class="co">#&gt; 10     1 2024-07-03 09:27:46 90999     1 R                   NA     160KB  393GB</span></span>
-<span><span class="co">#&gt; # ℹ 148 more rows</span></span></code></pre></div>
+<span><span class="co">#&gt;  1     1 2024-07-03 09:50:49 62041 60522 R                   NA    1.03GB  393GB</span></span>
+<span><span class="co">#&gt;  2     1 2024-07-03 09:50:49 60522 60300 rsession-arm64      NA  990.52MB  394GB</span></span>
+<span><span class="co">#&gt;  3     1 2024-07-03 09:50:49 58919     1 R                   NA  893.17MB  393GB</span></span>
+<span><span class="co">#&gt;  4     1 2024-07-03 09:50:49 97009     1 rsession-arm64      NA     240KB  394GB</span></span>
+<span><span class="co">#&gt;  5     1 2024-07-03 09:50:49 97008     1 rsession-arm64      NA     240KB  394GB</span></span>
+<span><span class="co">#&gt;  6     1 2024-07-03 09:50:49 97007     1 rsession-arm64      NA     240KB  394GB</span></span>
+<span><span class="co">#&gt;  7     1 2024-07-03 09:50:49 97006     1 rsession-arm64      NA     240KB  394GB</span></span>
+<span><span class="co">#&gt;  8     1 2024-07-03 09:50:49 97005     1 rsession-arm64      NA     240KB  394GB</span></span>
+<span><span class="co">#&gt;  9     1 2024-07-03 09:50:49 91012     1 R                   NA     160KB  393GB</span></span>
+<span><span class="co">#&gt; 10     1 2024-07-03 09:50:49 90999     1 R                   NA     160KB  393GB</span></span>
+<span><span class="co">#&gt; # ℹ 128 more rows</span></span></code></pre></div>
 <p>These results are a bit more interesting than the sequential results from <code>Sys.sleep(1)</code>. Look closely at the <code>ppid</code>s for each <code>id</code>; after a snapshot or two, you’ll see five identical <code>ppid</code>s for each <code>id</code>, and those <code>ppid</code>s match up with the remaining <code>pid</code> in the one remaining R process. This shows us that we’ve indeed distributed computations using forking in that that one remaining R process, the “parent,” has spawned off five child processes from itself.</p>
-<p>We can plot the result to get a better sense of how memory usage of these processes changes over time.</p>
+<p>We can plot the result to get a better sense of how memory usage of these processes changes over time:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">worker_ppid</span> <span class="op">&lt;-</span> <span class="fu">ps</span><span class="fu">::</span><span class="fu"><a href="https://ps.r-lib.org/reference/ps_pid.html" class="external-link">ps_pid</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
@@ -188,13 +189,13 @@
 <span>  <span class="fu">geom_line</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">scale_x_continuous</span><span class="op">(</span>breaks <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">res_mem</span><span class="op">$</span><span class="va">id</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-plot-cpu-1.png" width="100%"></p>
-<p>The percent CPU usage will always be <code>NA</code> the first time a process ID is seen, as the usage calculation is based on change since the previous recorded measure. As early as we measure, we see the workers at 100% usage, while the parent process is largely idle once it has sent data off to workers.</p>
+<p>The percent CPU usage will always be <code>NA</code> the first time a process ID is seen, as the usage calculation is based on change since the previous recorded value. As soon as we’re able to start measuring, we see the workers at 100% usage, while the parent process is largely idle once it has sent data off to workers.</p>
 </div>
 <div class="section level2">
 <h2 id="scope">Scope<a class="anchor" aria-label="anchor" href="#scope"></a>
 </h2>
-<p>There’s nothing specific about this package that necessitates the expression provided to <code><a href="reference/syrup.html">syrup()</a></code> is run in parallel. Said another way, syrup will work just fine with “normal,” sequentially-run R code. That said, there are many better, more fine-grained tools for the job in the case of sequential R code, such as <code><a href="https://rdrr.io/r/utils/Rprofmem.html" class="external-link">Rprofmem()</a></code>, the <a href="https://CRAN.R-project.org/package=profmem" class="external-link">profmem</a> package, the <a href="https://bench.r-lib.org/" class="external-link">bench</a> package, and packages in the <a href="https://github.com/r-prof" class="external-link">R-prof</a> GitHub organization.</p>
-<p>Results from syrup only provide enough detail for the coarsest analyses of memory usage, but they do provide an entry to “profiling” memory usage for R code that runs in parallel.</p>
+<p>While much of the verbiage in the package assumes that the supplied expression will be distributed across CPU cores, there’s nothing specific about this package that necessitates the expression provided to <code><a href="reference/syrup.html">syrup()</a></code> is run in parallel. Said another way, syrup will work just fine with “normal,” sequentially-run R code. That said, there are many better, more fine-grained tools for the job in the case of sequential R code, such as <code><a href="https://rdrr.io/r/utils/Rprofmem.html" class="external-link">Rprofmem()</a></code>, the <a href="https://CRAN.R-project.org/package=profmem" class="external-link">profmem</a> package, the <a href="https://bench.r-lib.org/" class="external-link">bench</a> package, and packages in the <a href="https://github.com/r-prof" class="external-link">R-prof</a> GitHub organization.</p>
+<p>Results from syrup only provide enough detail for the coarsest analyses of memory and CPU usage, but they do provide an entry point to “profiling” system resource usage for R code that runs in parallel.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
