@@ -12,13 +12,14 @@ status](https://www.r-pkg.org/badges/version/syrup)](https://CRAN.R-project.org/
 [![R-CMD-check](https://github.com/simonpcouch/syrup/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/simonpcouch/syrup/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-The goal of syrup is to coarsely measure memory usage of R code run in
-parallel by regularly taking snapshots of calls to the system command
-`ps`. The package name is an homage to syrupy (**SY**stem **R**esource
+The goal of syrup is to measure memory and CPU usage of R code by
+regularly taking snapshots of calls to the system command `ps`. The
+package provides an entry point (albeit coarse) to profile usage of
+system resources by R code run in parallel.
+
+The package name is an homage to syrupy (**SY**stem **R**esource
 **U**sage **P**rofile …um, **Y**eah), a Python tool at
-[jeetsukumaran/Syrupy](https://github.com/jeetsukumaran/Syrupy). **This
-package is highly experimental and results ought to be interpreted with
-caution.**
+[jeetsukumaran/Syrupy](https://github.com/jeetsukumaran/Syrupy).
 
 ## Installation
 
@@ -44,16 +45,16 @@ syrup(Sys.sleep(1))
 #> # A tibble: 48 × 8
 #>       id time                  pid  ppid name           pct_cpu       rss    vms
 #>    <dbl> <dttm>              <int> <int> <chr>            <dbl> <bch:byt> <bch:>
-#>  1     1 2024-07-03 09:27:42 61387 60522 R                   NA     114MB  392GB
-#>  2     1 2024-07-03 09:27:42 60522 60300 rsession-arm64      NA     848MB  394GB
-#>  3     1 2024-07-03 09:27:42 58919     1 R                   NA     771MB  393GB
-#>  4     1 2024-07-03 09:27:42 97009     1 rsession-arm64      NA     240KB  394GB
-#>  5     1 2024-07-03 09:27:42 97008     1 rsession-arm64      NA     240KB  394GB
-#>  6     1 2024-07-03 09:27:42 97007     1 rsession-arm64      NA     240KB  394GB
-#>  7     1 2024-07-03 09:27:42 97006     1 rsession-arm64      NA     240KB  394GB
-#>  8     1 2024-07-03 09:27:42 97005     1 rsession-arm64      NA     240KB  394GB
-#>  9     1 2024-07-03 09:27:42 91012     1 R                   NA     160KB  393GB
-#> 10     1 2024-07-03 09:27:42 90999     1 R                   NA     160KB  393GB
+#>  1     1 2024-07-03 09:50:45 62041 60522 R                   NA     113MB  392GB
+#>  2     1 2024-07-03 09:50:45 60522 60300 rsession-arm64      NA     991MB  394GB
+#>  3     1 2024-07-03 09:50:45 58919     1 R                   NA     873MB  393GB
+#>  4     1 2024-07-03 09:50:45 97009     1 rsession-arm64      NA     240KB  394GB
+#>  5     1 2024-07-03 09:50:45 97008     1 rsession-arm64      NA     240KB  394GB
+#>  6     1 2024-07-03 09:50:45 97007     1 rsession-arm64      NA     240KB  394GB
+#>  7     1 2024-07-03 09:50:45 97006     1 rsession-arm64      NA     240KB  394GB
+#>  8     1 2024-07-03 09:50:45 97005     1 rsession-arm64      NA     240KB  394GB
+#>  9     1 2024-07-03 09:50:45 91012     1 R                   NA     160KB  393GB
+#> 10     1 2024-07-03 09:50:45 90999     1 R                   NA     160KB  393GB
 #> # ℹ 38 more rows
 ```
 
@@ -142,20 +143,20 @@ res_mem <- syrup({
 })
 
 res_mem
-#> # A tibble: 158 × 8
+#> # A tibble: 138 × 8
 #>       id time                  pid  ppid name           pct_cpu       rss    vms
 #>    <dbl> <dttm>              <int> <int> <chr>            <dbl> <bch:byt> <bch:>
-#>  1     1 2024-07-03 09:27:46 61387 60522 R                   NA       1GB  393GB
-#>  2     1 2024-07-03 09:27:46 60522 60300 rsession-arm64      NA     848MB  394GB
-#>  3     1 2024-07-03 09:27:46 58919     1 R                   NA     771MB  393GB
-#>  4     1 2024-07-03 09:27:46 97009     1 rsession-arm64      NA     240KB  394GB
-#>  5     1 2024-07-03 09:27:46 97008     1 rsession-arm64      NA     240KB  394GB
-#>  6     1 2024-07-03 09:27:46 97007     1 rsession-arm64      NA     240KB  394GB
-#>  7     1 2024-07-03 09:27:46 97006     1 rsession-arm64      NA     240KB  394GB
-#>  8     1 2024-07-03 09:27:46 97005     1 rsession-arm64      NA     240KB  394GB
-#>  9     1 2024-07-03 09:27:46 91012     1 R                   NA     160KB  393GB
-#> 10     1 2024-07-03 09:27:46 90999     1 R                   NA     160KB  393GB
-#> # ℹ 148 more rows
+#>  1     1 2024-07-03 09:50:49 62041 60522 R                   NA    1.03GB  393GB
+#>  2     1 2024-07-03 09:50:49 60522 60300 rsession-arm64      NA  990.52MB  394GB
+#>  3     1 2024-07-03 09:50:49 58919     1 R                   NA  893.17MB  393GB
+#>  4     1 2024-07-03 09:50:49 97009     1 rsession-arm64      NA     240KB  394GB
+#>  5     1 2024-07-03 09:50:49 97008     1 rsession-arm64      NA     240KB  394GB
+#>  6     1 2024-07-03 09:50:49 97007     1 rsession-arm64      NA     240KB  394GB
+#>  7     1 2024-07-03 09:50:49 97006     1 rsession-arm64      NA     240KB  394GB
+#>  8     1 2024-07-03 09:50:49 97005     1 rsession-arm64      NA     240KB  394GB
+#>  9     1 2024-07-03 09:50:49 91012     1 R                   NA     160KB  393GB
+#> 10     1 2024-07-03 09:50:49 90999     1 R                   NA     160KB  393GB
+#> # ℹ 128 more rows
 ```
 
 These results are a bit more interesting than the sequential results
@@ -167,7 +168,7 @@ forking in that that one remaining R process, the “parent,” has spawned
 off five child processes from itself.
 
 We can plot the result to get a better sense of how memory usage of
-these processes changes over time.
+these processes changes over time:
 
 ``` r
 worker_ppid <- ps::ps_pid()
@@ -207,21 +208,23 @@ res_mem %>%
 
 The percent CPU usage will always be `NA` the first time a process ID is
 seen, as the usage calculation is based on change since the previous
-recorded measure. As early as we measure, we see the workers at 100%
-usage, while the parent process is largely idle once it has sent data
-off to workers.
+recorded value. As soon as we’re able to start measuring, we see the
+workers at 100% usage, while the parent process is largely idle once it
+has sent data off to workers.
 
 ## Scope
 
-There’s nothing specific about this package that necessitates the
-expression provided to `syrup()` is run in parallel. Said another way,
-syrup will work just fine with “normal,” sequentially-run R code. That
-said, there are many better, more fine-grained tools for the job in the
-case of sequential R code, such as `Rprofmem()`, the
+While much of the verbiage in the package assumes that the supplied
+expression will be distributed across CPU cores, there’s nothing
+specific about this package that necessitates the expression provided to
+`syrup()` is run in parallel. Said another way, syrup will work just
+fine with “normal,” sequentially-run R code. That said, there are many
+better, more fine-grained tools for the job in the case of sequential R
+code, such as `Rprofmem()`, the
 [profmem](https://CRAN.R-project.org/package=profmem) package, the
 [bench](https://bench.r-lib.org/) package, and packages in the
 [R-prof](https://github.com/r-prof) GitHub organization.
 
 Results from syrup only provide enough detail for the coarsest analyses
-of memory usage, but they do provide an entry to “profiling” memory
-usage for R code that runs in parallel.
+of memory and CPU usage, but they do provide an entry point to
+“profiling” system resource usage for R code that runs in parallel.

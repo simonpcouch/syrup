@@ -2,14 +2,14 @@
 % Please edit documentation in R/syrup.R
 \name{syrup}
 \alias{syrup}
-\title{Memory Usage Information for Parallel R Code}
+\title{Memory and CPU Usage Information for Parallel R Code}
 \usage{
 syrup(expr, interval = 0.5, peak = FALSE, env = caller_env())
 }
 \arguments{
 \item{expr}{An expression.}
 
-\item{interval}{The interval at which to take snapshots of memory usage.
+\item{interval}{The interval at which to take snapshots of respirce usage.
 In practice, there's an overhead on top of each of these intervals.}
 
 \item{peak}{Whether to return rows for only the "peak" memory usage.
@@ -20,21 +20,23 @@ processes so that the tibble doesn't grow too large.}
 \item{env}{The environment to evaluate \code{expr} in.}
 }
 \value{
-A tibble with column \code{id} and a number of columns from
-\code{\link[ps:ps]{ps::ps()}} output describing memory usage. Notably, the process ID \code{pid},
-parent process ID \code{ppid}, and resident set size \code{rss} (a measure of memory
-usage).
+A tibble with columns \code{id} and \code{time} and a number of columns from
+\code{\link[ps:ps]{ps::ps()}} output describing memory and CPU usage. Notably, the process ID
+\code{pid}, parent process ID \code{ppid}, percent CPU usage, and resident set size
+\code{rss} (a measure of memory usage).
 }
 \description{
 This function is a wrapper around the system command \code{ps} that can
-be used to benchmark (peak) memory usage of parallel R code.
+be used to benchmark (peak) memory and CPU usage of parallel R code.
 By taking snapshots the memory usage of R processes at a regular \code{interval},
-the function dynamically builds up a  profile of their usage of system
+the function dynamically builds up a profile of their usage of system
 resources.
 }
 \details{
-There's nothing specific about this function that necessitates the provided
-expression is run in parallel. Said another way, \code{syrup()} will work just fine
+While much of the verbiage in the package assumes that the supplied
+expression will be distributed across CPU cores, there's nothing specific
+about this package that necessitates the expression provided to \code{syrup()} is
+run in parallel. Said another way, \code{syrup()} will work just fine
 with "normal," sequentially-run R code (as in the examples). That said,
 there are many better, more fine-grained tools for the job in the case of
 sequential R code, such as \code{\link[=Rprofmem]{Rprofmem()}}, the
@@ -62,7 +64,7 @@ res_syrup <- syrup({res_output <- Sys.sleep(1)})
 
 res_syrup
 
-# to snapshot memory information more (or less) often, set `interval`
+# to snapshot memory and CPU information more (or less) often, set `interval`
 syrup(Sys.sleep(1), interval = .01)
 
 # use `peak = TRUE` to return only the snapshot with

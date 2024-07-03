@@ -3,9 +3,9 @@
 \docType{package}
 \name{syrup-package}
 \alias{syrup-package}
-\title{syrup: Measure Memory Usage for Parallel R Code}
+\title{syrup: Measure Memory and CPU Usage for Parallel R Code}
 \description{
-Coarsely measures memory usage of R code run in parallel by regularly taking snapshots of calls to the system command ps.
+Measures memory and CPU usage of R code by regularly taking snapshots of calls to the system command ps. The package provides an entry point (albeit coarse) to profile usage of system resources by R code run in parallel.
 }
 \seealso{
 Useful links:
