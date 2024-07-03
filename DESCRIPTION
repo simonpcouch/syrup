@@ -21,6 +21,7 @@ Depends:
     bench
 Imports: 
     callr,
+    dplyr,
     ps,
     purrr,
     rlang,
