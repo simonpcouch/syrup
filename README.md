@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# syrup
+# syrup <a href="https://simonpcouch.github.io/syrup/"><img src="man/figures/logo.png" align="right" height="138" alt="syrup website" /></a>
 
 <!-- badges: start -->
 
@@ -42,20 +42,20 @@ outputs a tibble. Supplying a rather boring expression:
 
 ``` r
 syrup(Sys.sleep(1))
-#> # A tibble: 48 × 8
+#> # A tibble: 51 × 8
 #>       id time                  pid  ppid name           pct_cpu       rss    vms
 #>    <dbl> <dttm>              <int> <int> <chr>            <dbl> <bch:byt> <bch:>
-#>  1     1 2024-07-03 09:50:45 62041 60522 R                   NA     113MB  392GB
-#>  2     1 2024-07-03 09:50:45 60522 60300 rsession-arm64      NA     991MB  394GB
-#>  3     1 2024-07-03 09:50:45 58919     1 R                   NA     873MB  393GB
-#>  4     1 2024-07-03 09:50:45 97009     1 rsession-arm64      NA     240KB  394GB
-#>  5     1 2024-07-03 09:50:45 97008     1 rsession-arm64      NA     240KB  394GB
-#>  6     1 2024-07-03 09:50:45 97007     1 rsession-arm64      NA     240KB  394GB
-#>  7     1 2024-07-03 09:50:45 97006     1 rsession-arm64      NA     240KB  394GB
-#>  8     1 2024-07-03 09:50:45 97005     1 rsession-arm64      NA     240KB  394GB
-#>  9     1 2024-07-03 09:50:45 91012     1 R                   NA     160KB  393GB
-#> 10     1 2024-07-03 09:50:45 90999     1 R                   NA     160KB  393GB
-#> # ℹ 38 more rows
+#>  1     1 2024-07-03 11:37:30 66626 60522 R                   NA     114MB  392GB
+#>  2     1 2024-07-03 11:37:30 65763 65760 ark                 NA     570MB  395GB
+#>  3     1 2024-07-03 11:37:30 60522 60300 rsession-arm64      NA     697MB  394GB
+#>  4     1 2024-07-03 11:37:30 58919     1 R                   NA    1003MB  393GB
+#>  5     1 2024-07-03 11:37:30 97009     1 rsession-arm64      NA     128KB  394GB
+#>  6     1 2024-07-03 11:37:30 97008     1 rsession-arm64      NA     128KB  394GB
+#>  7     1 2024-07-03 11:37:30 97007     1 rsession-arm64      NA     240KB  394GB
+#>  8     1 2024-07-03 11:37:30 97006     1 rsession-arm64      NA     240KB  394GB
+#>  9     1 2024-07-03 11:37:30 97005     1 rsession-arm64      NA     128KB  394GB
+#> 10     1 2024-07-03 11:37:30 91012     1 R                   NA     128KB  393GB
+#> # ℹ 41 more rows
 ```
 
 In this tibble, `id` defines a specific time point at which process
@@ -129,8 +129,8 @@ dat
 The call to `tune_grid()` does some setup sequentially before sending
 data off to the five child processes to actually carry out the model
 fitting. After models are fitted, data is sent back to the parent
-process to be combined. To better understand memory usage throughout
-that process, we wrap the call in `syrup()`:
+process to be combined. To better understand system resource usage
+throughout that process, we wrap the call in `syrup()`:
 
 ``` r
 res_mem <- syrup({
@@ -143,20 +143,20 @@ res_mem <- syrup({
 })
 
 res_mem
-#> # A tibble: 138 × 8
+#> # A tibble: 187 × 8
 #>       id time                  pid  ppid name           pct_cpu       rss    vms
 #>    <dbl> <dttm>              <int> <int> <chr>            <dbl> <bch:byt> <bch:>
-#>  1     1 2024-07-03 09:50:49 62041 60522 R                   NA    1.03GB  393GB
-#>  2     1 2024-07-03 09:50:49 60522 60300 rsession-arm64      NA  990.52MB  394GB
-#>  3     1 2024-07-03 09:50:49 58919     1 R                   NA  893.17MB  393GB
-#>  4     1 2024-07-03 09:50:49 97009     1 rsession-arm64      NA     240KB  394GB
-#>  5     1 2024-07-03 09:50:49 97008     1 rsession-arm64      NA     240KB  394GB
-#>  6     1 2024-07-03 09:50:49 97007     1 rsession-arm64      NA     240KB  394GB
-#>  7     1 2024-07-03 09:50:49 97006     1 rsession-arm64      NA     240KB  394GB
-#>  8     1 2024-07-03 09:50:49 97005     1 rsession-arm64      NA     240KB  394GB
-#>  9     1 2024-07-03 09:50:49 91012     1 R                   NA     160KB  393GB
-#> 10     1 2024-07-03 09:50:49 90999     1 R                   NA     160KB  393GB
-#> # ℹ 128 more rows
+#>  1     1 2024-07-03 11:37:34 66626 60522 R                   NA    1.23GB  393GB
+#>  2     1 2024-07-03 11:37:34 65763 65760 ark                 NA  569.98MB  395GB
+#>  3     1 2024-07-03 11:37:34 60522 60300 rsession-arm64      NA  696.94MB  394GB
+#>  4     1 2024-07-03 11:37:34 58919     1 R                   NA  960.27MB  393GB
+#>  5     1 2024-07-03 11:37:34 97009     1 rsession-arm64      NA     128KB  394GB
+#>  6     1 2024-07-03 11:37:34 97008     1 rsession-arm64      NA     128KB  394GB
+#>  7     1 2024-07-03 11:37:34 97007     1 rsession-arm64      NA     240KB  394GB
+#>  8     1 2024-07-03 11:37:34 97006     1 rsession-arm64      NA     240KB  394GB
+#>  9     1 2024-07-03 11:37:34 97005     1 rsession-arm64      NA     128KB  394GB
+#> 10     1 2024-07-03 11:37:34 91012     1 R                   NA     128KB  393GB
+#> # ℹ 177 more rows
 ```
 
 These results are a bit more interesting than the sequential results
