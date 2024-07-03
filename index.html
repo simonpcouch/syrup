@@ -90,20 +90,20 @@
 <p>The main function in the syrup package is the function by the same name. The main argument to <code><a href="reference/syrup.html">syrup()</a></code> is an expression, and the function outputs a tibble. Supplying a rather boring expression:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/syrup.html">syrup</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.sleep.html" class="external-link">Sys.sleep</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 51 × 8</span></span>
+<span><span class="co">#&gt; # A tibble: 48 × 8</span></span>
 <span><span class="co">#&gt;       id time                  pid  ppid name           pct_cpu       rss    vms</span></span>
 <span><span class="co">#&gt;    &lt;dbl&gt; &lt;dttm&gt;              &lt;int&gt; &lt;int&gt; &lt;chr&gt;            &lt;dbl&gt; &lt;bch:byt&gt; &lt;bch:&gt;</span></span>
-<span><span class="co">#&gt;  1     1 2024-07-03 11:37:30 66626 60522 R                   NA     114MB  392GB</span></span>
-<span><span class="co">#&gt;  2     1 2024-07-03 11:37:30 65763 65760 ark                 NA     570MB  395GB</span></span>
-<span><span class="co">#&gt;  3     1 2024-07-03 11:37:30 60522 60300 rsession-arm64      NA     697MB  394GB</span></span>
-<span><span class="co">#&gt;  4     1 2024-07-03 11:37:30 58919     1 R                   NA    1003MB  393GB</span></span>
-<span><span class="co">#&gt;  5     1 2024-07-03 11:37:30 97009     1 rsession-arm64      NA     128KB  394GB</span></span>
-<span><span class="co">#&gt;  6     1 2024-07-03 11:37:30 97008     1 rsession-arm64      NA     128KB  394GB</span></span>
-<span><span class="co">#&gt;  7     1 2024-07-03 11:37:30 97007     1 rsession-arm64      NA     240KB  394GB</span></span>
-<span><span class="co">#&gt;  8     1 2024-07-03 11:37:30 97006     1 rsession-arm64      NA     240KB  394GB</span></span>
-<span><span class="co">#&gt;  9     1 2024-07-03 11:37:30 97005     1 rsession-arm64      NA     128KB  394GB</span></span>
-<span><span class="co">#&gt; 10     1 2024-07-03 11:37:30 91012     1 R                   NA     128KB  393GB</span></span>
-<span><span class="co">#&gt; # ℹ 41 more rows</span></span></code></pre></div>
+<span><span class="co">#&gt;  1     1 2024-07-03 11:42:33 67101 60522 R                   NA     112MB  392GB</span></span>
+<span><span class="co">#&gt;  2     1 2024-07-03 11:42:33 60522 60300 rsession-arm64      NA     653MB  394GB</span></span>
+<span><span class="co">#&gt;  3     1 2024-07-03 11:42:33 58919     1 R                   NA     773MB  393GB</span></span>
+<span><span class="co">#&gt;  4     1 2024-07-03 11:42:33 97009     1 rsession-arm64      NA     128KB  394GB</span></span>
+<span><span class="co">#&gt;  5     1 2024-07-03 11:42:33 97008     1 rsession-arm64      NA     128KB  394GB</span></span>
+<span><span class="co">#&gt;  6     1 2024-07-03 11:42:33 97007     1 rsession-arm64      NA     240KB  394GB</span></span>
+<span><span class="co">#&gt;  7     1 2024-07-03 11:42:33 97006     1 rsession-arm64      NA     240KB  394GB</span></span>
+<span><span class="co">#&gt;  8     1 2024-07-03 11:42:33 97005     1 rsession-arm64      NA     128KB  394GB</span></span>
+<span><span class="co">#&gt;  9     1 2024-07-03 11:42:33 91012     1 R                   NA     128KB  393GB</span></span>
+<span><span class="co">#&gt; 10     1 2024-07-03 11:42:33 90999     1 R                   NA     128KB  393GB</span></span>
+<span><span class="co">#&gt; # ℹ 38 more rows</span></span></code></pre></div>
 <p>In this tibble, <code>id</code> defines a specific time point at which process usage was snapshotted, and the remaining columns show output derived from <a href="https://ps.r-lib.org/reference/ps.html" class="external-link">ps::ps()</a>. Notably, <code>pid</code> is the process ID, <code>ppid</code> is the process ID of the parent process, <code>pct_cpu</code> is the percent CPU usage, and <code>rss</code> is the resident set size (a measure of memory usage).</p>
 <p>The function works by:</p>
 <ul>
@@ -164,20 +164,20 @@
 <span><span class="op">}</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">res_mem</span></span>
-<span><span class="co">#&gt; # A tibble: 187 × 8</span></span>
+<span><span class="co">#&gt; # A tibble: 158 × 8</span></span>
 <span><span class="co">#&gt;       id time                  pid  ppid name           pct_cpu       rss    vms</span></span>
 <span><span class="co">#&gt;    &lt;dbl&gt; &lt;dttm&gt;              &lt;int&gt; &lt;int&gt; &lt;chr&gt;            &lt;dbl&gt; &lt;bch:byt&gt; &lt;bch:&gt;</span></span>
-<span><span class="co">#&gt;  1     1 2024-07-03 11:37:34 66626 60522 R                   NA    1.23GB  393GB</span></span>
-<span><span class="co">#&gt;  2     1 2024-07-03 11:37:34 65763 65760 ark                 NA  569.98MB  395GB</span></span>
-<span><span class="co">#&gt;  3     1 2024-07-03 11:37:34 60522 60300 rsession-arm64      NA  696.94MB  394GB</span></span>
-<span><span class="co">#&gt;  4     1 2024-07-03 11:37:34 58919     1 R                   NA  960.27MB  393GB</span></span>
-<span><span class="co">#&gt;  5     1 2024-07-03 11:37:34 97009     1 rsession-arm64      NA     128KB  394GB</span></span>
-<span><span class="co">#&gt;  6     1 2024-07-03 11:37:34 97008     1 rsession-arm64      NA     128KB  394GB</span></span>
-<span><span class="co">#&gt;  7     1 2024-07-03 11:37:34 97007     1 rsession-arm64      NA     240KB  394GB</span></span>
-<span><span class="co">#&gt;  8     1 2024-07-03 11:37:34 97006     1 rsession-arm64      NA     240KB  394GB</span></span>
-<span><span class="co">#&gt;  9     1 2024-07-03 11:37:34 97005     1 rsession-arm64      NA     128KB  394GB</span></span>
-<span><span class="co">#&gt; 10     1 2024-07-03 11:37:34 91012     1 R                   NA     128KB  393GB</span></span>
-<span><span class="co">#&gt; # ℹ 177 more rows</span></span></code></pre></div>
+<span><span class="co">#&gt;  1     1 2024-07-03 11:42:38 67101 60522 R                   NA    1.05GB  393GB</span></span>
+<span><span class="co">#&gt;  2     1 2024-07-03 11:42:38 60522 60300 rsession-arm64      NA  653.44MB  394GB</span></span>
+<span><span class="co">#&gt;  3     1 2024-07-03 11:42:38 58919     1 R                   NA  838.56MB  393GB</span></span>
+<span><span class="co">#&gt;  4     1 2024-07-03 11:42:38 97009     1 rsession-arm64      NA     128KB  394GB</span></span>
+<span><span class="co">#&gt;  5     1 2024-07-03 11:42:38 97008     1 rsession-arm64      NA     128KB  394GB</span></span>
+<span><span class="co">#&gt;  6     1 2024-07-03 11:42:38 97007     1 rsession-arm64      NA     240KB  394GB</span></span>
+<span><span class="co">#&gt;  7     1 2024-07-03 11:42:38 97006     1 rsession-arm64      NA     240KB  394GB</span></span>
+<span><span class="co">#&gt;  8     1 2024-07-03 11:42:38 97005     1 rsession-arm64      NA     128KB  394GB</span></span>
+<span><span class="co">#&gt;  9     1 2024-07-03 11:42:38 91012     1 R                   NA     128KB  393GB</span></span>
+<span><span class="co">#&gt; 10     1 2024-07-03 11:42:38 90999     1 R                   NA     128KB  393GB</span></span>
+<span><span class="co">#&gt; # ℹ 148 more rows</span></span></code></pre></div>
 <p>These results are a bit more interesting than the sequential results from <code>Sys.sleep(1)</code>. Look closely at the <code>ppid</code>s for each <code>id</code>; after a snapshot or two, you’ll see five identical <code>ppid</code>s for each <code>id</code>, and those <code>ppid</code>s match up with the remaining <code>pid</code> in the one remaining R process. This shows us that we’ve indeed distributed computations using forking in that that one remaining R process, the “parent,” has spawned off five child processes from itself.</p>
 <p>We can plot the result to get a better sense of how memory usage of these processes changes over time:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
