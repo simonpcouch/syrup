@@ -82,16 +82,16 @@
 <span><span class="co">#&gt; # A tibble: 48 × 8</span></span>
 <span><span class="co">#&gt;       id time                  pid  ppid name           pct_cpu       rss    vms</span></span>
 <span><span class="co">#&gt;    &lt;dbl&gt; &lt;dttm&gt;              &lt;int&gt; &lt;int&gt; &lt;chr&gt;            &lt;dbl&gt; &lt;bch:byt&gt; &lt;bch:&gt;</span></span>
-<span><span class="co">#&gt;  1     1 2024-07-03 09:21:29 60958 60522 R                   NA     118MB  392GB</span></span>
-<span><span class="co">#&gt;  2     1 2024-07-03 09:21:29 60522 60300 rsession-arm64      NA     840MB  394GB</span></span>
-<span><span class="co">#&gt;  3     1 2024-07-03 09:21:29 58919     1 R                   NA     607MB  393GB</span></span>
-<span><span class="co">#&gt;  4     1 2024-07-03 09:21:29 97009     1 rsession-arm64      NA     240KB  394GB</span></span>
-<span><span class="co">#&gt;  5     1 2024-07-03 09:21:29 97008     1 rsession-arm64      NA     240KB  394GB</span></span>
-<span><span class="co">#&gt;  6     1 2024-07-03 09:21:29 97007     1 rsession-arm64      NA     240KB  394GB</span></span>
-<span><span class="co">#&gt;  7     1 2024-07-03 09:21:29 97006     1 rsession-arm64      NA     240KB  394GB</span></span>
-<span><span class="co">#&gt;  8     1 2024-07-03 09:21:29 97005     1 rsession-arm64      NA     240KB  394GB</span></span>
-<span><span class="co">#&gt;  9     1 2024-07-03 09:21:29 91012     1 R                   NA     160KB  393GB</span></span>
-<span><span class="co">#&gt; 10     1 2024-07-03 09:21:29 90999     1 R                   NA     160KB  393GB</span></span>
+<span><span class="co">#&gt;  1     1 2024-07-03 09:27:42 61387 60522 R                   NA     114MB  392GB</span></span>
+<span><span class="co">#&gt;  2     1 2024-07-03 09:27:42 60522 60300 rsession-arm64      NA     848MB  394GB</span></span>
+<span><span class="co">#&gt;  3     1 2024-07-03 09:27:42 58919     1 R                   NA     771MB  393GB</span></span>
+<span><span class="co">#&gt;  4     1 2024-07-03 09:27:42 97009     1 rsession-arm64      NA     240KB  394GB</span></span>
+<span><span class="co">#&gt;  5     1 2024-07-03 09:27:42 97008     1 rsession-arm64      NA     240KB  394GB</span></span>
+<span><span class="co">#&gt;  6     1 2024-07-03 09:27:42 97007     1 rsession-arm64      NA     240KB  394GB</span></span>
+<span><span class="co">#&gt;  7     1 2024-07-03 09:27:42 97006     1 rsession-arm64      NA     240KB  394GB</span></span>
+<span><span class="co">#&gt;  8     1 2024-07-03 09:27:42 97005     1 rsession-arm64      NA     240KB  394GB</span></span>
+<span><span class="co">#&gt;  9     1 2024-07-03 09:27:42 91012     1 R                   NA     160KB  393GB</span></span>
+<span><span class="co">#&gt; 10     1 2024-07-03 09:27:42 90999     1 R                   NA     160KB  393GB</span></span>
 <span><span class="co">#&gt; # ℹ 38 more rows</span></span></code></pre></div>
 <p>In this tibble, <code>id</code> defines a specific time point at which process usage was snapshotted, and the remaining columns show output derived from <a href="https://ps.r-lib.org/reference/ps.html" class="external-link">ps::ps()</a>. Notably, <code>pid</code> is the process ID, <code>ppid</code> is the process ID of the parent process, <code>pct_cpu</code> is the percent CPU usage, and <code>rss</code> is the resident set size (a measure of memory usage).</p>
 <p>The function works by:</p>
@@ -156,16 +156,16 @@
 <span><span class="co">#&gt; # A tibble: 158 × 8</span></span>
 <span><span class="co">#&gt;       id time                  pid  ppid name           pct_cpu       rss    vms</span></span>
 <span><span class="co">#&gt;    &lt;dbl&gt; &lt;dttm&gt;              &lt;int&gt; &lt;int&gt; &lt;chr&gt;            &lt;dbl&gt; &lt;bch:byt&gt; &lt;bch:&gt;</span></span>
-<span><span class="co">#&gt;  1     1 2024-07-03 09:21:33 60958 60522 R                   NA    1.12GB  393GB</span></span>
-<span><span class="co">#&gt;  2     1 2024-07-03 09:21:33 60522 60300 rsession-arm64      NA  840.28MB  394GB</span></span>
-<span><span class="co">#&gt;  3     1 2024-07-03 09:21:33 58919     1 R                   NA  624.81MB  393GB</span></span>
-<span><span class="co">#&gt;  4     1 2024-07-03 09:21:33 97009     1 rsession-arm64      NA     240KB  394GB</span></span>
-<span><span class="co">#&gt;  5     1 2024-07-03 09:21:33 97008     1 rsession-arm64      NA     240KB  394GB</span></span>
-<span><span class="co">#&gt;  6     1 2024-07-03 09:21:33 97007     1 rsession-arm64      NA     240KB  394GB</span></span>
-<span><span class="co">#&gt;  7     1 2024-07-03 09:21:33 97006     1 rsession-arm64      NA     240KB  394GB</span></span>
-<span><span class="co">#&gt;  8     1 2024-07-03 09:21:33 97005     1 rsession-arm64      NA     240KB  394GB</span></span>
-<span><span class="co">#&gt;  9     1 2024-07-03 09:21:33 91012     1 R                   NA     160KB  393GB</span></span>
-<span><span class="co">#&gt; 10     1 2024-07-03 09:21:33 90999     1 R                   NA     160KB  393GB</span></span>
+<span><span class="co">#&gt;  1     1 2024-07-03 09:27:46 61387 60522 R                   NA       1GB  393GB</span></span>
+<span><span class="co">#&gt;  2     1 2024-07-03 09:27:46 60522 60300 rsession-arm64      NA     848MB  394GB</span></span>
+<span><span class="co">#&gt;  3     1 2024-07-03 09:27:46 58919     1 R                   NA     771MB  393GB</span></span>
+<span><span class="co">#&gt;  4     1 2024-07-03 09:27:46 97009     1 rsession-arm64      NA     240KB  394GB</span></span>
+<span><span class="co">#&gt;  5     1 2024-07-03 09:27:46 97008     1 rsession-arm64      NA     240KB  394GB</span></span>
+<span><span class="co">#&gt;  6     1 2024-07-03 09:27:46 97007     1 rsession-arm64      NA     240KB  394GB</span></span>
+<span><span class="co">#&gt;  7     1 2024-07-03 09:27:46 97006     1 rsession-arm64      NA     240KB  394GB</span></span>
+<span><span class="co">#&gt;  8     1 2024-07-03 09:27:46 97005     1 rsession-arm64      NA     240KB  394GB</span></span>
+<span><span class="co">#&gt;  9     1 2024-07-03 09:27:46 91012     1 R                   NA     160KB  393GB</span></span>
+<span><span class="co">#&gt; 10     1 2024-07-03 09:27:46 90999     1 R                   NA     160KB  393GB</span></span>
 <span><span class="co">#&gt; # ℹ 148 more rows</span></span></code></pre></div>
 <p>These results are a bit more interesting than the sequential results from <code>Sys.sleep(1)</code>. Look closely at the <code>ppid</code>s for each <code>id</code>; after a snapshot or two, you’ll see five identical <code>ppid</code>s for each <code>id</code>, and those <code>ppid</code>s match up with the remaining <code>pid</code> in the one remaining R process. This shows us that we’ve indeed distributed computations using forking in that that one remaining R process, the “parent,” has spawned off five child processes from itself.</p>
 <p>We can plot the result to get a better sense of how memory usage of these processes changes over time.</p>
