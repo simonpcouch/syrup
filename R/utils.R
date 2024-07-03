@@ -5,7 +5,7 @@ ps_r_processes <- function(id) {
   ps <-
     vctrs::vec_slice(
       ps,
-      (ps$name == "R" | grepl("rsession", ps$name)) &
+      (ps$name %in% c("R", "ark") | grepl("rsession", ps$name)) &
       ps$status != "zombie" &
       ps$pid != ps::ps_pid()
     )
