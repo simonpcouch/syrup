@@ -38,5 +38,5 @@ calculate_pct_cpu <- function(time, user, system) {
   user_diffs <- diff(user)
   system_diffs <- diff(system)
 
-  c(NA_real_, (user_diffs + system_diffs) / intervals)
+  c(NA_real_, (user_diffs + system_diffs) * 100 / intervals)
 }
