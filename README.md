@@ -41,25 +41,28 @@ outputs a tibble. Supplying a rather boring expression:
 
 ``` r
 syrup(Sys.sleep(1))
-#> # A tibble: 9 × 8
-#>      id time                  pid  ppid name              pct_cpu      rss   vms
-#>   <dbl> <dttm>              <int> <int> <chr>               <dbl> <bch:by> <bch>
-#> 1     1 2024-06-21 16:19:16 97299 97184 R              NA          113.7MB 392GB
-#> 2     1 2024-06-21 16:19:16 97184 92899 rsession-arm64 NA          307.3MB 393GB
-#> 3     1 2024-06-21 16:19:16 77045 76803 rsession-arm64 NA           87.2MB 394GB
-#> 4     2 2024-06-21 16:19:16 97299 97184 R               0          113.7MB 392GB
-#> 5     2 2024-06-21 16:19:16 97184 92899 rsession-arm64  0.000264   307.3MB 393GB
-#> 6     2 2024-06-21 16:19:16 77045 76803 rsession-arm64  0.0000705   87.2MB 394GB
-#> 7     3 2024-06-21 16:19:17 97299 97184 R               0.0000110  113.7MB 392GB
-#> 8     3 2024-06-21 16:19:17 97184 92899 rsession-arm64  0.000279   307.3MB 393GB
-#> 9     3 2024-06-21 16:19:17 77045 76803 rsession-arm64  0.0000706   87.2MB 394GB
+#> # A tibble: 48 × 8
+#>       id time                  pid  ppid name           pct_cpu       rss    vms
+#>    <dbl> <dttm>              <int> <int> <chr>            <dbl> <bch:byt> <bch:>
+#>  1     1 2024-07-03 09:21:29 60958 60522 R                   NA     118MB  392GB
+#>  2     1 2024-07-03 09:21:29 60522 60300 rsession-arm64      NA     840MB  394GB
+#>  3     1 2024-07-03 09:21:29 58919     1 R                   NA     607MB  393GB
+#>  4     1 2024-07-03 09:21:29 97009     1 rsession-arm64      NA     240KB  394GB
+#>  5     1 2024-07-03 09:21:29 97008     1 rsession-arm64      NA     240KB  394GB
+#>  6     1 2024-07-03 09:21:29 97007     1 rsession-arm64      NA     240KB  394GB
+#>  7     1 2024-07-03 09:21:29 97006     1 rsession-arm64      NA     240KB  394GB
+#>  8     1 2024-07-03 09:21:29 97005     1 rsession-arm64      NA     240KB  394GB
+#>  9     1 2024-07-03 09:21:29 91012     1 R                   NA     160KB  393GB
+#> 10     1 2024-07-03 09:21:29 90999     1 R                   NA     160KB  393GB
+#> # ℹ 38 more rows
 ```
 
 In this tibble, `id` defines a specific time point at which process
-usage was snapshotted, and the remaining columns show output from
-[ps::ps()](https://ps.r-lib.org/reference/ps.html). Notably, `pid` is
-the process ID, `ppid` is the process ID of the parent process, and
-`rss` is the resident set size (a measure of memory usage).
+usage was snapshotted, and the remaining columns show output derived
+from [ps::ps()](https://ps.r-lib.org/reference/ps.html). Notably, `pid`
+is the process ID, `ppid` is the process ID of the parent process,
+`pct_cpu` is the percent CPU usage, and `rss` is the resident set size
+(a measure of memory usage).
 
 The function works by:
 
@@ -139,20 +142,20 @@ res_mem <- syrup({
 })
 
 res_mem
-#> # A tibble: 63 × 8
-#>       id time                  pid  ppid name             pct_cpu      rss   vms
-#>    <dbl> <dttm>              <int> <int> <chr>              <dbl> <bch:by> <bch>
-#>  1     1 2024-06-21 16:19:20 97299 97184 R               NA         1.14GB 393GB
-#>  2     1 2024-06-21 16:19:20 97184 92899 rsession-arm64  NA       307.28MB 393GB
-#>  3     1 2024-06-21 16:19:20 77045 76803 rsession-arm64  NA        87.22MB 394GB
-#>  4     2 2024-06-21 16:19:21 97327 97299 R               NA       569.45MB 393GB
-#>  5     2 2024-06-21 16:19:21 97326 97299 R               NA       580.41MB 393GB
-#>  6     2 2024-06-21 16:19:21 97325 97299 R               NA       579.05MB 393GB
-#>  7     2 2024-06-21 16:19:21 97324 97299 R               NA       589.11MB 393GB
-#>  8     2 2024-06-21 16:19:21 97323 97299 R               NA       608.23MB 393GB
-#>  9     2 2024-06-21 16:19:21 97299 97184 R                1.53e-2   1.32GB 393GB
-#> 10     2 2024-06-21 16:19:21 97184 92899 rsession-arm64   6.76e-5 307.28MB 393GB
-#> # ℹ 53 more rows
+#> # A tibble: 158 × 8
+#>       id time                  pid  ppid name           pct_cpu       rss    vms
+#>    <dbl> <dttm>              <int> <int> <chr>            <dbl> <bch:byt> <bch:>
+#>  1     1 2024-07-03 09:21:33 60958 60522 R                   NA    1.12GB  393GB
+#>  2     1 2024-07-03 09:21:33 60522 60300 rsession-arm64      NA  840.28MB  394GB
+#>  3     1 2024-07-03 09:21:33 58919     1 R                   NA  624.81MB  393GB
+#>  4     1 2024-07-03 09:21:33 97009     1 rsession-arm64      NA     240KB  394GB
+#>  5     1 2024-07-03 09:21:33 97008     1 rsession-arm64      NA     240KB  394GB
+#>  6     1 2024-07-03 09:21:33 97007     1 rsession-arm64      NA     240KB  394GB
+#>  7     1 2024-07-03 09:21:33 97006     1 rsession-arm64      NA     240KB  394GB
+#>  8     1 2024-07-03 09:21:33 97005     1 rsession-arm64      NA     240KB  394GB
+#>  9     1 2024-07-03 09:21:33 91012     1 R                   NA     160KB  393GB
+#> 10     1 2024-07-03 09:21:33 90999     1 R                   NA     160KB  393GB
+#> # ℹ 148 more rows
 ```
 
 These results are a bit more interesting than the sequential results
@@ -167,7 +170,7 @@ We can plot the result to get a better sense of how memory usage of
 these processes changes over time.
 
 ``` r
-worker_ppid <- names(sort(-table(res_mem$ppid)))[1]
+worker_ppid <- ps::ps_pid()
 
 res_mem %>%
   filter(ppid == worker_ppid | pid == worker_ppid) %>%
@@ -185,11 +188,28 @@ receives data from tidymodels and begins fitting models. Eventually,
 each of those workers returns their results to the parent process, and
 their `rss` is once again `NA`. The parent process wraps up its
 computations before completing evaluation of the expression, at which
-point `syrup()` returns.
+point `syrup()` returns. (Keep in mind: memory is weird. In the above
+plot, the total memory allotted to the parent session and its five
+workers at each ID is not simply the sum of those `rss` values, as
+memory is shared among them.) We see a another side of the story come
+together for CPU usage:
 
-Keep in mind: memory is weird. In the above plot, the total memory
-allotted to the parent session and its five workers at each ID is not
-simply the sum of those `rss` values, as memory is shared among them.
+``` r
+res_mem %>%
+  filter(ppid == worker_ppid | pid == worker_ppid) %>%
+  ggplot() +
+  aes(x = id, y = pct_cpu, group = pid) +
+  geom_line() +
+  scale_x_continuous(breaks = 1:max(res_mem$id))
+```
+
+<img src="man/figures/README-plot-cpu-1.png" width="100%" />
+
+The percent CPU usage will always be `NA` the first time a process ID is
+seen, as the usage calculation is based on change since the previous
+recorded measure. As early as we measure, we see the workers at 100%
+usage, while the parent process is largely idle once it has sent data
+off to workers.
 
 ## Scope
 

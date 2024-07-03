@@ -43,7 +43,7 @@ The main function in the syrup package is the function by the same name. The mai
 syrup(Sys.sleep(1))
 ```
 
-In this tibble, `id` defines a specific time point at which process usage was snapshotted, and the remaining columns show output from [ps::ps()](https://ps.r-lib.org/reference/ps.html). Notably, `pid` is the process ID, `ppid` is the process ID of the parent process, and `rss` is the resident set size (a measure of memory usage).
+In this tibble, `id` defines a specific time point at which process usage was snapshotted, and the remaining columns show output derived from [ps::ps()](https://ps.r-lib.org/reference/ps.html). Notably, `pid` is the process ID, `ppid` is the process ID of the parent process, `pct_cpu` is the percent CPU usage, and `rss` is the resident set size (a measure of memory usage).
 
 The function works by:
 
@@ -99,7 +99,7 @@ These results are a bit more interesting than the sequential results from `Sys.s
 We can plot the result to get a better sense of how memory usage of these processes changes over time.
 
 ```{r plot-mem, warning = FALSE}
-worker_ppid <- names(sort(-table(res_mem$ppid)))[1]
+worker_ppid <- ps::ps_pid()
 
 res_mem %>%
   filter(ppid == worker_ppid | pid == worker_ppid) %>%
@@ -109,9 +109,18 @@ res_mem %>%
   scale_x_continuous(breaks = 1:max(res_mem$id))
 ```
 
-At first, only the parent process has non-`NA` `rss`, as tidymodels hasn't sent data off to any workers yet. Then, each of the 5 workers receives data from tidymodels and begins fitting models. Eventually, each of those workers returns their results to the parent process, and their `rss` is once again `NA`. The parent process wraps up its computations before completing evaluation of the expression, at which point `syrup()` returns.
+At first, only the parent process has non-`NA` `rss`, as tidymodels hasn't sent data off to any workers yet. Then, each of the 5 workers receives data from tidymodels and begins fitting models. Eventually, each of those workers returns their results to the parent process, and their `rss` is once again `NA`. The parent process wraps up its computations before completing evaluation of the expression, at which point `syrup()` returns. (Keep in mind: memory is weird. In the above plot, the total memory allotted to the parent session and its five workers at each ID is not simply the sum of those `rss` values, as memory is shared among them.) We see a another side of the story come together for CPU usage:
 
-Keep in mind: memory is weird. In the above plot, the total memory allotted to the parent session and its five workers at each ID is not simply the sum of those `rss` values, as memory is shared among them.
+```{r plot-cpu, message = FALSE, warning = FALSE}
+res_mem %>%
+  filter(ppid == worker_ppid | pid == worker_ppid) %>%
+  ggplot() +
+  aes(x = id, y = pct_cpu, group = pid) +
+  geom_line() +
+  scale_x_continuous(breaks = 1:max(res_mem$id))
+```
+
+The percent CPU usage will always be `NA` the first time a process ID is seen, as the usage calculation is based on change since the previous recorded measure. As early as we measure, we see the workers at 100% usage, while the parent process is largely idle once it has sent data off to workers.
 
 ## Scope
 
