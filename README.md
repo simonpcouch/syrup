@@ -23,6 +23,12 @@ The package name is an homage to syrupy (**SY**stem **R**esource
 
 ## Installation
 
+Install the latest release of syrup from CRAN like so:
+
+``` r
+install.packages("syrup")
+```
+
 You can install the development version of syrup like so:
 
 ``` r
