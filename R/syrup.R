@@ -135,7 +135,8 @@ syrup <- function(expr, interval = .5, peak = FALSE, env = caller_env()) {
     if (!is.null(sesh_res$error)) {
       stop(gsub("\n", "   ", conditionMessage(sesh_res$error)))
     } else {
-      stop(paste0("Code: ", sesh_res$code,
+      stop(paste0("Class: ", paste0(class(sesh_res), collapse = ""),
+                  "Code: ", sesh_res$code,
                   "  Message: ", sesh_res$message,
                   "  stderr: ", sesh_res$stderr))
     }
