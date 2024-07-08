@@ -131,6 +131,10 @@ syrup <- function(expr, interval = .5, peak = FALSE, env = caller_env()) {
   # return the memory usage information
   res <- sesh_res$result
 
+  if (is.null(res)) {
+    stop(sesh_res$error)
+  }
+
   if (identical(res$id[length(res$id)], 1) && !isTRUE(peak)) {
     rlang::warn(c(
       "!" = "`expr` evaluated fully before syrup could take a snapshot of memory usage.",
