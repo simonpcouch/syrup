@@ -132,7 +132,7 @@ syrup <- function(expr, interval = .5, peak = FALSE, env = caller_env()) {
   res <- sesh_res$result
 
   if (is.null(res)) {
-    stop(sesh_res$error)
+    stop(gsub("\n", "   ", conditionMessage(sesh_res$error)))
   }
 
   if (identical(res$id[length(res$id)], 1) && !isTRUE(peak)) {
