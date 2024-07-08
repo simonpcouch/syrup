@@ -56,9 +56,10 @@ retrieve_results <- function(sesh, call = caller_env()) {
   sesh$close()
 
   if (cnt == 10) {
-    cli::cli_abort(
+    rlang::abort(
       "Unable to retrieve resource usage results from the temporary session.",
-      .internal = TRUE
+      .internal = TRUE,
+      call = call
     )
   }
 
