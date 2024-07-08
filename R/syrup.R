@@ -120,27 +120,11 @@ syrup <- function(expr, interval = .5, peak = FALSE, env = caller_env()) {
 
   # tell `sesh` to stop taking snapshots
   file.remove(keep_going_file)
-  Sys.sleep(interval + .1)
+  Sys.sleep(interval + .2)
 
-  # grab the result from sesh and close it
-  sesh_res <- sesh$read()
-  sesh$close()
+  res <- retrieve_results(sesh)
 
   withr::deferred_clear()
-
-  # return the memory usage information
-  res <- sesh_res$result
-
-  if (is.null(res)) {
-    if (!is.null(sesh_res$error)) {
-      stop(gsub("\n", "   ", conditionMessage(sesh_res$error)))
-    } else {
-      stop(paste0("Class: ", paste0(class(sesh_res), collapse = ""),
-                  "Code: ", sesh_res$code,
-                  "  Message: ", sesh_res$message,
-                  "  stderr: ", sesh_res$stderr))
-    }
-  }
 
   if (identical(res$id[length(res$id)], 1) && !isTRUE(peak)) {
     rlang::warn(c(
