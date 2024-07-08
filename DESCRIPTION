@@ -7,7 +7,7 @@ Authors@R: c(
       person(given = "Posit Software, PBC", role = c("cph", "fnd"))        
     )
 Description: Measures memory and CPU usage of R code by regularly taking 
-    snapshots of calls to the system command ps. The package provides an entry 
+    snapshots of calls to the system command 'ps'. The package provides an entry 
     point (albeit coarse) to profile usage of system resources by R code run 
     in parallel.
 License: MIT + file LICENSE

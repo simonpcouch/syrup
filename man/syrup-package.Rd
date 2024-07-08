@@ -5,7 +5,9 @@
 \alias{syrup-package}
 \title{syrup: Measure Memory and CPU Usage for Parallel R Code}
 \description{
-Measures memory and CPU usage of R code by regularly taking snapshots of calls to the system command ps. The package provides an entry point (albeit coarse) to profile usage of system resources by R code run in parallel.
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
+Measures memory and CPU usage of R code by regularly taking snapshots of calls to the system command 'ps'. The package provides an entry point (albeit coarse) to profile usage of system resources by R code run in parallel.
 }
 \seealso{
 Useful links:
