@@ -40,3 +40,28 @@ calculate_pct_cpu <- function(time, user, system) {
 
   c(NA_real_, (user_diffs + system_diffs) * 100 / intervals)
 }
+
+# grab the result from sesh and close it.
+# may be a slightly longer delay before sesh is able to return, so iteratively
+# query until we get a result back.
+retrieve_results <- function(sesh, call = caller_env()) {
+  sesh_res <- sesh$read()
+  cnt <- 1
+  while (is.null(sesh_res) & cnt < 10) {
+    Sys.sleep(.2)
+    sesh_res <- sesh$read()
+    cnt <- cnt + 1
+  }
+
+  sesh$close()
+
+  if (cnt == 10) {
+    rlang::abort(
+      "Unable to retrieve resource usage results from the temporary session.",
+      .internal = TRUE,
+      call = call
+    )
+  }
+
+  sesh_res$result
+}

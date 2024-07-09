@@ -120,16 +120,11 @@ syrup <- function(expr, interval = .5, peak = FALSE, env = caller_env()) {
 
   # tell `sesh` to stop taking snapshots
   file.remove(keep_going_file)
-  Sys.sleep(interval + .1)
+  Sys.sleep(interval + .2)
 
-  # grab the result from sesh and close it
-  sesh_res <- sesh$read()
-  sesh$close()
+  res <- retrieve_results(sesh)
 
   withr::deferred_clear()
-
-  # return the memory usage information
-  res <- sesh_res$result
 
   if (identical(res$id[length(res$id)], 1) && !isTRUE(peak)) {
     rlang::warn(c(
