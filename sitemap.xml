@@ -1,27 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://simonpcouch.github.io/syrup/404.html</loc>
-  </url>
-  <url>
-    <loc>https://simonpcouch.github.io/syrup/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://simonpcouch.github.io/syrup/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://simonpcouch.github.io/syrup/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://simonpcouch.github.io/syrup/index.html</loc>
-  </url>
-  <url>
-    <loc>https://simonpcouch.github.io/syrup/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://simonpcouch.github.io/syrup/reference/syrup-package.html</loc>
-  </url>
-  <url>
-    <loc>https://simonpcouch.github.io/syrup/reference/syrup.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://simonpcouch.github.io/syrup/404.html</loc></url>
+<url><loc>https://simonpcouch.github.io/syrup/LICENSE-text.html</loc></url>
+<url><loc>https://simonpcouch.github.io/syrup/LICENSE.html</loc></url>
+<url><loc>https://simonpcouch.github.io/syrup/authors.html</loc></url>
+<url><loc>https://simonpcouch.github.io/syrup/index.html</loc></url>
+<url><loc>https://simonpcouch.github.io/syrup/news/index.html</loc></url>
+<url><loc>https://simonpcouch.github.io/syrup/reference/index.html</loc></url>
+<url><loc>https://simonpcouch.github.io/syrup/reference/syrup-package.html</loc></url>
+<url><loc>https://simonpcouch.github.io/syrup/reference/syrup.html</loc></url>
 </urlset>
+
