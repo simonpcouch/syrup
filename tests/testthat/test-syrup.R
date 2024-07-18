@@ -58,6 +58,9 @@ test_that("syrup(interval) works", {
 
   expect_s3_class(res_01, "tbl_df")
   expect_s3_class(res_1, "tbl_df")
+
+  skip_on_cran()
+
   expect_true(length(unique(res_01$id)) > length(unique(res_1$id)))
 })
 
@@ -70,5 +73,7 @@ test_that("syrup does basic type checks", {
 })
 
 test_that("syrup warns with only one ID", {
+  skip_on_cran()
+
   expect_snapshot_warning(syrup(1))
 })
