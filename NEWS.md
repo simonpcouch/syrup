@@ -1,4 +1,6 @@
-# syrup (development version)
+# syrup 0.1.2
+
+* Resolves issue with Fedora in R-devel.
 
 # syrup 0.1.1
 

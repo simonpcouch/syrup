@@ -45,7 +45,7 @@
 #' Note that information on the R process `sesh` is filtered out from the results
 #' automatically.
 #'
-#' @examplesIf ps::ps_os_type()[["POSIX"]]
+#' @examplesIf ps::ps_os_type()[["POSIX"]] && !is_fedora()
 #' # pass any expression to syrup. first, sequentially:
 #' res_syrup <- syrup({res_output <- Sys.sleep(1)})
 #'
@@ -137,4 +137,3 @@ syrup <- function(expr, interval = .5, peak = FALSE, env = caller_env()) {
 
   res
 }
-
