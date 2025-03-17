@@ -65,3 +65,17 @@ retrieve_results <- function(sesh, call = caller_env()) {
 
   sesh_res$result
 }
+
+is_unix <- function() {
+  identical(.Platform$OS.type, "unix")
+}
+
+# from rstudio/reticulate
+is_fedora <- function() {
+  if (is_unix() && file.exists("/etc/os-release")) {
+    os_info <- readLines("/etc/os-release")
+    any(grepl("Fedora", os_info))
+  } else {
+    FALSE
+  }
+}
