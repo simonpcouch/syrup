@@ -58,7 +58,7 @@ Note that information on the R process \code{sesh} is filtered out from the resu
 automatically.
 }
 \examples{
-\dontshow{if (!syrup:::on_cran()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (!on_cran()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 # pass any expression to syrup. first, sequentially:
 res_syrup <- syrup({res_output <- Sys.sleep(1)})
 
