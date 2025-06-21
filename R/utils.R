@@ -79,3 +79,8 @@ is_fedora <- function() {
     FALSE
   }
 }
+
+on_cran <- function() {
+  !interactive() &&
+  isTRUE(as.logical(Sys.getenv("NOT_CRAN", "false")))
+}
