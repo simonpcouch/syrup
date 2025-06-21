@@ -45,7 +45,7 @@
 #' Note that information on the R process `sesh` is filtered out from the results
 #' automatically.
 #'
-#' @examplesIf !on_cran()
+#' @examplesIf !syrup:::on_cran()
 #' # pass any expression to syrup. first, sequentially:
 #' res_syrup <- syrup({res_output <- Sys.sleep(1)})
 #'
